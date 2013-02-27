@@ -3,31 +3,55 @@
 #include "mainwindow.h"
 #include "fcsfile.h"
 #include <QListWidget>
+#include <QTableWidget>
+#include "graphwiget.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
 
-    QListWidget * widget = new QListWidget;
+    QTableWidget * widget = new QTableWidget;
     widget->show();
 
-    FcsFile file("example/example.lmd");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    GraphWiget * graph = new GraphWiget;
+
+
+    FcsFile file("example/exemple3.lmd");
+    if (!file.open(QIODevice::ReadOnly))
         qDebug()<<"cannot open file";
 
-QVariantMap map =file.textSegment();
 
-    foreach (QString key, map.keys())
+    widget->setColumnCount(file.parameterCount());
+    widget->setRowCount(file.eventCount());
+
+
+
+    int column = 0;
+
+    QList<QVariantList> allData =  file.dataSegment();
+
+    foreach (QVariantList item,allData)
     {
-        QListWidgetItem * item =new QListWidgetItem;
-        item->setText(key+" : "+map.value(key).toString());
-        widget->addItem(item);
+        int row = 0;
+        foreach (QVariant value, item)
+        {
+            QTableWidgetItem * t = new QTableWidgetItem;
+            t->setText(value.toString());
+            widget->setItem(row,column,t);
+            ++row;
+        }
+
+        QTableWidgetItem * header = new QTableWidgetItem;
+        header->setText(file.textSegment().value(QString("P%1N").arg(column+1)).toString());
+        widget->setHorizontalHeaderItem(column,header);
+        ++column;
     }
 
 
-file.close();;
-    MainWindow w;
-    w.show();
-    
+graph->setData(allData.at(0), allData.at(1));
+
+    graph->show();
+    file.close();
+
     return a.exec();
 }

@@ -12,9 +12,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    fcsfile.cpp
+    fcsfile.cpp \
+    graphwiget.cpp
 
 HEADERS  += mainwindow.h \
-    fcsfile.h
+    fcsfile.h \
+    graphwiget.h
 
 FORMS    += mainwindow.ui

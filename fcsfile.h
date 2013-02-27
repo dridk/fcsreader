@@ -13,6 +13,10 @@ public:
     FcsFile(const QString& name);
     QString version();
     QVariantMap textSegment();
+    int parameterCount();
+    int eventCount();
+    QDateTime aquisitionDate();
+    QList<QVariantList> dataSegment();
 
 
 protected:
