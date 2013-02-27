@@ -48,9 +48,10 @@ int main(int argc, char *argv[])
     }
 
 
-graph->setData(allData.at(0), allData.at(1));
 
     graph->show();
+    graph->setData(allData.at(0), allData.at(1));
+
     file.close();
 
     return a.exec();

@@ -17,6 +17,7 @@ private:
 
 QVariantList mXData;
 QVariantList mYData;
+QImage mImage;
     
 };
 
