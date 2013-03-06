@@ -1,24 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>640</width>
+    <height>480</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>640</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionFcsInfo"/>
+    <addaction name="actionShowModel"/>
+    <addaction name="actionShowCompensationTable"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionHistogramPlot"/>
+   <addaction name="actionDotPlot"/>
+  </widget>
+  <action name="actionOpen">
+   <property name="text">
+    <string>open</string>
+   </property>
+   <property name="toolTip">
+    <string>open fcs file</string>
+   </property>
+  </action>
+  <action name="actionFcsInfo">
+   <property name="text">
+    <string>fcsInfo</string>
+   </property>
+   <property name="toolTip">
+    <string>show fcs text segment</string>
+   </property>
+  </action>
+  <action name="actionShowModel">
+   <property name="text">
+    <string>showModel</string>
+   </property>
+   <property name="toolTip">
+    <string>show model table</string>
+   </property>
+  </action>
+  <action name="actionHistogramPlot">
+   <property name="text">
+    <string>histogramPlot</string>
+   </property>
+   <property name="toolTip">
+    <string>add histogram plot</string>
+   </property>
+  </action>
+  <action name="actionDotPlot">
+   <property name="text">
+    <string>dotPlot</string>
+   </property>
+   <property name="toolTip">
+    <string>add dot plot</string>
+   </property>
+  </action>
+  <action name="actionShowCompensationTable">
+   <property name="text">
+    <string>showCompensationTable</string>
+   </property>
+  </action>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
  <resources/>
  <connections/>
 </ui>

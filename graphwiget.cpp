@@ -70,13 +70,13 @@ void GraphWiget::setData(const QVariantList &xdata, const QVariantList &ydata)
             col = Qt::blue;
         else {
             col = pixelColor.lighter();
-    }
+        }
 
         QPen pen;
         pen.setColor(col);
         pen.setWidth(1);
-paint.setPen(pen);
-       paint.drawPoint(x,y);
+        paint.setPen(pen);
+        paint.drawPoint(x,y);
 
 
 

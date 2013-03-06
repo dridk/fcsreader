@@ -5,18 +5,19 @@
 #-------------------------------------------------
 
 QT       += core gui
-
 TARGET = fcsViewer
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    fcsfile.cpp \
-    graphwiget.cpp
 
-HEADERS  += mainwindow.h \
-    fcsfile.h \
-    graphwiget.h
+SOURCES *= *.cpp
 
-FORMS    += mainwindow.ui
+
+HEADERS  *= *.h \
+    histogramplotwidget.h \
+    compensationwidget.h
+
+
+FORMS    += \
+    mainwindow.ui
+

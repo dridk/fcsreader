@@ -5,18 +5,26 @@
 #include <QListWidget>
 #include <QTableWidget>
 #include "graphwiget.h"
+#include "fcsmodel.h"
+#include "fcsinfowidget.h"
+#include "qcustomplot.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
 
-    QTableWidget * widget = new QTableWidget;
-    widget->show();
 
+
+
+
+    //  qDebug()<<file.dataSegment().size();
+
+
+    /*
     GraphWiget * graph = new GraphWiget;
 
 
-    FcsFile file("example/exemple3.lmd");
+    FcsFile file("example/exemple4.LMD");
     if (!file.open(QIODevice::ReadOnly))
         qDebug()<<"cannot open file";
 
@@ -52,7 +60,16 @@ int main(int argc, char *argv[])
     graph->show();
     graph->setData(allData.at(0), allData.at(1));
 
-    file.close();
+    file.close(); */
+
+        MainWindow mainwindow;
+        mainwindow.show();
+
+
+
+
+
+
 
     return a.exec();
 }
