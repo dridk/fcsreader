@@ -59,18 +59,19 @@ void MainWindow::showFcsTable()
 void MainWindow::showCompensationTable()
 {
 
-    CompensationWidget * widget = new CompensationWidget;
-    widget->setup(mFile.data());
-    widget->show();
+//    CompensationWidget * widget = new CompensationWidget;
+//    widget->setup(mFile.data());
+//    widget->show();
 
 }
 
 void MainWindow::open()
 {
 
-   // QString name = QFileDialog::getOpenFileName(this);
-
-    mFile.setFileName("example/exemple3.lmd");
+   QString name = QFileDialog::getOpenFileName(this);
+//   name = "example/exemple3.lmd";
+   mFile.setFileName(name);
+   // mFile.setFileName("example/exemple3.lmd");
     if (!mFile.open(QIODevice::ReadOnly))
         qDebug()<<"cannot open file";
     else {
@@ -90,18 +91,18 @@ void MainWindow::open()
 void MainWindow::createHistogramPlot()
 {
 
-HistogramPlotWidget * plot = new HistogramPlotWidget;
-plot->setFcsData(mFile.data());
+//HistogramPlotWidget * plot = new HistogramPlotWidget;
+//plot->setFcsData(mFile.data());
 
-plot->plot();
+//plot->plot();
 
-QMdiSubWindow * sub = new QMdiSubWindow;
-sub->setAttribute(Qt::WA_DeleteOnClose);
-sub->setMinimumSize(200,200);
-sub->resize(300,300);
-sub->setWidget(plot);
-sub->systemMenu()->addAction("test");
-mArea->addSubWindow(sub)->show();
+//QMdiSubWindow * sub = new QMdiSubWindow;
+//sub->setAttribute(Qt::WA_DeleteOnClose);
+//sub->setMinimumSize(200,200);
+//sub->resize(300,300);
+//sub->setWidget(plot);
+//sub->systemMenu()->addAction("test");
+//mArea->addSubWindow(sub)->show();
 
 }
 
@@ -110,9 +111,9 @@ void MainWindow::createDotPlot()
 
     DotPlotWidget * plot = new DotPlotWidget;
     plot->setFcsData(mFile.data());
-    plot->setXSection(3);
-    plot->setYSection(4);
-    plot->plot();
+    plot->setXSection(1);
+    plot->setYSection(0);
+    plot->replot();
 
     QMdiSubWindow * sub = new QMdiSubWindow;
     sub->setAttribute(Qt::WA_DeleteOnClose);

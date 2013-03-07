@@ -5,22 +5,29 @@
 #include "fcsdata.h"
 #include <QGraphicsWidget>
 #include "qcustomplot.h"
+#include "gateitem.h"
 class DotPlotWidget : public AbstractPlotWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     DotPlotWidget(QWidget * parent = 0);
-    virtual void plot();
+
+    virtual void replot();
 
     void setXSection(int section);
     void setYSection(int section);
 
 public slots:
-    void legendClicked(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*);
+    void addGate();
+    void compute();
+
+public slots:
 
 private:
     int mXSection;
     int mYSection;
+    GateItem * item ;
+
 
 
 

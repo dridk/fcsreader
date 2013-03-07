@@ -14,8 +14,8 @@ SOURCES *= *.cpp
 
 
 HEADERS  *= *.h \
-    histogramplotwidget.h \
-    compensationwidget.h
+    gateitem.h
+
 
 
 FORMS    += \
