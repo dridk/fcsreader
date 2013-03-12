@@ -216,7 +216,8 @@ QCPData::QCPData(double key, double value) :
   keyErrorPlus(0),
   keyErrorMinus(0),
   valueErrorPlus(0),
-  valueErrorMinus(0)
+  valueErrorMinus(0),
+    index(0)
 {
 }
 
@@ -388,7 +389,7 @@ void QCPGraph::setData(QCPDataMap *data, bool copy)
   vectors should have equal length. Else, the number of added points will be the size of the
   smallest vector.
 */
-void QCPGraph::setData(const QVector<double> &key, const QVector<double> &value)
+void QCPGraph:: setData(const QVector<double> &key, const QVector<double> &value)
 {
   mData->clear();
   int n = key.size();

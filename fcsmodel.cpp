@@ -1,27 +1,43 @@
 #include "fcsmodel.h"
 #include <QDebug>
-FcsModel::FcsModel(QObject *parent):
+FcsModel::FcsModel( QObject *parent):
     QAbstractTableModel(parent)
 {
+    mGateList = NULL;
+    mCurrentGate = "all";
 
 }
 int FcsModel::rowCount(const QModelIndex &parent) const
 {
-    int row = mFcsData.rowCount();
+    if (!mGateList)
+        return 0;
+
+    int row = mGateList->value(mCurrentGate).rowCount();
     return row;
 }
 
 int FcsModel::columnCount(const QModelIndex &parent) const
 {
-    int col = mFcsData.columnCount();
+    if (!mGateList)
+        return 0;
+    int col = mGateList->value(mCurrentGate).columnCount();
     return col;
 }
 
 QVariant FcsModel::data(const QModelIndex &index, int role) const
 {
+
+    if (!index.isValid())
+        return QVariant();
+
+    if (!mGateList->value(mCurrentGate).rowCount() )
+        return QVariant();
+
     if (role == Qt::DisplayRole)
     {
-        return mFcsData.value(index.row(),index.column());
+        if (!mGateList)
+            return QVariant();
+        return mGateList->value(mCurrentGate).valueAtCoord(index.row(),index.column());
     }
     return QVariant();
 
@@ -29,24 +45,49 @@ QVariant FcsModel::data(const QModelIndex &index, int role) const
 
 QVariant FcsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+
+    if (!mGateList->value(mCurrentGate).rowCount() )
+        return QVariant();
+
+
+    if (orientation == Qt::Horizontal)
+    {
+        if ( role == Qt::DisplayRole)
+             return mGateList->value(mCurrentGate).headerName(section);
+
+
+    }
+
+    if (orientation == Qt::Vertical)
     {
 
-        return mFcsData.headerName(section);
+        if (role == Qt::DisplayRole)
+            return section;
     }
+
 
 
     return QVariant();
 }
 
-void FcsModel::setSource(const FcsData &data)
+void FcsModel::setGateList(GateList *gateList)
 {
-    mFcsData = data;
+    mGateList = gateList;
     reset();
 }
+
+
 
 void FcsModel::update()
 {
     reset();
+}
+
+void FcsModel::setCurrentGate(const QString &key)
+{
+    mCurrentGate = key;
+    reset();
+
+
 }
 

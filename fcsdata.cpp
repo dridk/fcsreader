@@ -1,31 +1,40 @@
 #include "fcsdata.h"
 #include <QDebug>
 FcsData::FcsData()
+    :QList<int>()
 {
     mRowCount = 0;
     mColumnCount = 0;
     mSource = 0;
+
+
 }
 
-double FcsData::value(int row, int column) const
+
+
+
+double FcsData::valueAtCoord(int row, int column) const
 {
-    if (!mSource)
-        return -1;
-    return mSource->at(mIds.value(mColumnCount * row + column));
+    return mSource->value(value(mColumnCount * row + column));
 }
 
-
-void FcsData::setRowCount(int count)
+void FcsData::appendRow(int row)
 {
-    mRowCount = count;
+    for (int i=mColumnCount * row; i<mColumnCount * row + mColumnCount; ++i){
+        append(i);
+
+    }
+
+    mRowCount++;
+
 }
+
+
+
 
 void FcsData::setColumnCount(int count)
 {
     mColumnCount = count;
-
-
-
 }
 
 int FcsData::rowCount() const
@@ -38,23 +47,24 @@ int FcsData::columnCount() const
     return mColumnCount;
 }
 
-int FcsData::size() const
-{
-    return mIds.size();
-}
 
 void FcsData::fill()
 {
     if (!mSource)
         return;
-    mIds.clear();
+
+    clear();
     for (int i=0; i<mSource->size(); ++i)
-        mIds.append(i);
+        append(i);
+
+    if (mColumnCount > 0)
+        mRowCount = int(size() / mColumnCount);
 }
 
-const QString &FcsData::headerName(int column) const
+QString FcsData::headerName(int column) const
 {
     return mHeaders.value(column,"not defined");
+
 }
 
 void FcsData::setHeaderName(int column, const QString &name)
@@ -62,7 +72,7 @@ void FcsData::setHeaderName(int column, const QString &name)
     mHeaders[column] = name;
 }
 
-void FcsData::setSource(QVector<double> *source)
+void FcsData::setSource( QVector<double> *source)
 {
     mSource = source;
 

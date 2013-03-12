@@ -13,20 +13,33 @@ public:
     DotPlotWidget(QWidget * parent = 0);
 
     virtual void replot();
+    virtual void init();
 
     void setXSection(int section);
     void setYSection(int section);
+    void setGateName(const QString& gateName);
+
+    FcsData dataGated(GateItem * gateItem);
 
 public slots:
     void addGate();
     void compute();
+    void computeAllGate();
+    void actionTriggered();
 
-public slots:
+protected:
+
 
 private:
     int mXSection;
     int mYSection;
-    GateItem * item ;
+    QString mGateName;
+    QList<GateItem*> mGates;
+    QCPDataMap mDataMap;
+
+    QMenu * mGateMenu;
+    QMenu * mXMenu;
+    QMenu * mYMenu;
 
 
 

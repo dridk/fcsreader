@@ -145,6 +145,8 @@ public:
   double key, value;
   double keyErrorPlus, keyErrorMinus;
   double valueErrorPlus, valueErrorMinus;
+  int index; // ADD BY SACHA
+
 };
 Q_DECLARE_TYPEINFO(QCPData, Q_MOVABLE_TYPE);
 

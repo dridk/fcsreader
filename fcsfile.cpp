@@ -35,7 +35,6 @@ FcsData FcsFile::data()
 {
     FcsData fcsData;
     fcsData.setSource(dataSegment());
-    fcsData.setRowCount(eventCount());
     fcsData.setColumnCount(parameterCount());
     for (int i=0; i<parameterCount(); ++i)
         fcsData.setHeaderName(i,mTextSegment.value(QString("P%1N").arg(i+1)).toString());

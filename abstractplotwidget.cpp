@@ -6,37 +6,34 @@ AbstractPlotWidget::AbstractPlotWidget(QWidget *parent) :
     QGraphicsView(parent)
 {
 
+    mGateList = NULL;
+    mMenu = new QMenu(this);
     setScene( new QGraphicsScene);
     mPlot  = new QCustomPlot;
     mPlotItem = new QGraphicsProxyWidget;
     mPlotItem->setWidget(mPlot);
     scene()->addItem(mPlotItem);
     mPlot->addGraph();
+    setContextMenuPolicy(Qt::DefaultContextMenu);
 
 
 
 
 }
 
-void AbstractPlotWidget::setFcsData(const FcsData &fcsData)
+void AbstractPlotWidget::setGateList(GateList *mapDatas)
 {
-    mFcsData = fcsData;
-
+    mGateList = mapDatas;
+    init();
 }
-
-const FcsData &AbstractPlotWidget::fcsData() const
+GateList *AbstractPlotWidget::gateList() const
 {
-    return mFcsData;
+    return mGateList;
 }
 
 void AbstractPlotWidget::contextMenuEvent(QContextMenuEvent * event)
 {
-
-    //    QMenu *menu=new QMenu;
-
-    //    menu->addAction("test");
-    //         menu->exec(event->globalPos());
-
+    menu()->exec(event->globalPos());
 
 
 }
@@ -100,4 +97,5 @@ void AbstractPlotWidget::resizeEvent(QResizeEvent *event)
     mPlotItem->resize(event->size());
 
 }
+
 

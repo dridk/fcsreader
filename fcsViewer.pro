@@ -14,10 +14,15 @@ SOURCES *= *.cpp
 
 
 HEADERS  *= *.h \
-    gateitem.h
+    gateitem.h \
+    fcsmodeltable.h \
+    gatelist.h
 
 
 
 FORMS    += \
     mainwindow.ui
+
+RESOURCES += \
+    icons/icons.qrc
 

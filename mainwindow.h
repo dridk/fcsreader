@@ -6,6 +6,8 @@
 #include "fcsfile.h"
 #include "fcsinfowidget.h"
 #include "fcsmodel.h"
+#include "fcsmodeltable.h"
+#include "gatelist.h"
 namespace Ui {
 class MainWindow;
 }
@@ -32,8 +34,9 @@ private:
     QMdiArea * mArea;
     FcsFile mFile;
     FcsInfoWidget * mInfoWidget;
-    QTableView * mModelView;
+    FcsModelTable * mTableView;
     FcsModel * mModel;
+    GateList mGates;
 
 
 

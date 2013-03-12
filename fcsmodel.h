@@ -5,23 +5,26 @@
 #include <QAbstractTableModel>
 #include <QBuffer>
 #include "fcsdata.h"
-
+#include "gatelist.h"
 class FcsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit FcsModel( QObject *parent = 0);
+    explicit FcsModel(QObject *parent = 0);
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-    void setSource(const FcsData& data);
+    void setGateList(GateList * gateList);
+    GateList * gateList() {return mGateList;}
     void update();
+    void setCurrentGate(const QString& key);
 
 
 private:
-    FcsData mFcsData;
+    GateList * mGateList;
+    QString mCurrentGate;
 
 
     

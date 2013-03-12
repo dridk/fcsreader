@@ -3,13 +3,17 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 GateItem::GateItem(QGraphicsItem *parent)
-    :QAbstractGraphicsShapeItem(parent)
+    :QGraphicsObject(parent)
 {
 
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    setAcceptTouchEvents(true);
     mPolygon = QPolygonF(QRectF(0,0,50,50));
-      mResize = false;
-      mPointIndex = 0;
+    mResize = false;
+    mPointIndex = 0;
+
+
+
 
 }
 
@@ -19,25 +23,27 @@ void GateItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     painter->setBrush(brush());
     painter->setPen(pen());
-
+    // painter->setCompositionMode(QPainter::CompositionMode_Plus);
     painter->drawPolygon(mPolygon);
+    //    painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+    // painter->setBrush(Qt::transparent);
+    painter->drawPolygon(mPolygon);
+
+    //painter->drawRect(boundingRect().adjusted(-3,-3,3,3));
 
     QPen pen;
     pen.setWidth(1);
     pen.setColor(Qt::red);
     painter->setPen(pen);
     painter->setBrush(QBrush(Qt::red));
+
     foreach (QPointF p, mPolygon){
-        // painter->drawPoint(p);
-
         QRectF zone(p - QPointF(3,3) ,p + QPointF(3,3));
-
         painter->drawRect(zone);
 
     }
 
 
-   painter->drawPoints(mPoints);
 
 }
 
@@ -63,16 +69,19 @@ void GateItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     }
 
-    return QAbstractGraphicsShapeItem::mousePressEvent(event);
+    return QGraphicsObject::mousePressEvent(event);
 }
 
 void GateItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (mResize){
-    mResize = false;
+        mResize = false;
     }
     else
-    return QAbstractGraphicsShapeItem::mouseReleaseEvent(event);
+        QGraphicsObject::mouseReleaseEvent(event);
+
+    emit positionChanged();
+
 }
 
 void GateItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -85,8 +94,15 @@ void GateItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     }
 
-else
-        return QAbstractGraphicsShapeItem::mouseMoveEvent(event);
+    else
+        return QGraphicsObject::mouseMoveEvent(event);
+}
+
+void GateItem::keyPressEvent(QKeyEvent *event)
+{
+
+    qDebug()<<"delete";
+
 }
 
 QPolygonF GateItem::mapPolygonToScene() const

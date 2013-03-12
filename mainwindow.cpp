@@ -7,6 +7,7 @@
 #include <QGraphicsView>
 #include <QMdiSubWindow>
 #include <QFileDialog>
+#include "fcsmodeltable.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -16,11 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(mArea);
 
     mInfoWidget = new FcsInfoWidget(&mFile);
-    mModel = new FcsModel();
 
 
-    mModelView = new QTableView;
-    mModelView->setModel(mModel);
+
+    mTableView = new FcsModelTable;
 
 
 
@@ -47,9 +47,9 @@ void MainWindow::showFcsInfo()
 void MainWindow::showFcsTable()
 {
 
-    mModelView->update();
-    mModelView->show();
 
+    mTableView->setGateList(&mGates);
+    mTableView->show();
 
 
 
@@ -68,15 +68,16 @@ void MainWindow::showCompensationTable()
 void MainWindow::open()
 {
 
-   QString name = QFileDialog::getOpenFileName(this);
-//   name = "example/exemple3.lmd";
+//   QString name = QFileDialog::getOpenFileName(this);
+   QString name = "/home/schutz/example.LMD";
    mFile.setFileName(name);
-   // mFile.setFileName("example/exemple3.lmd");
+   // mFile.setFileName("/home/schutz/cyto.lmd");
     if (!mFile.open(QIODevice::ReadOnly))
         qDebug()<<"cannot open file";
     else {
         mFile.load();
-        mModel->setSource(mFile.data());
+        mGates.insert("all",mFile.data());
+
     }
     statusBar()->showMessage(mFile.fileName());
 
@@ -110,9 +111,10 @@ void MainWindow::createDotPlot()
 {
 
     DotPlotWidget * plot = new DotPlotWidget;
-    plot->setFcsData(mFile.data());
+    plot->setGateList(&mGates);
     plot->setXSection(1);
     plot->setYSection(0);
+    plot->setGateName("all");
     plot->replot();
 
     QMdiSubWindow * sub = new QMdiSubWindow;
