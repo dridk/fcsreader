@@ -46,28 +46,32 @@ ShapeItem::ShapeItem( QGraphicsItem * parent ):
 void ShapeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
+    QPolygon tpoly = mTransform.map(mPolygon);
     QPen pen;
     pen.setStyle(Qt::DashLine);
     pen.setColor(Qt::lightGray);
     painter->setPen(pen);
-    painter->drawRect(mPolygon.boundingRect());
+    painter->drawRect(tpoly.boundingRect());
 
     pen.setStyle(Qt::SolidLine);
     pen.setColor(Qt::black);
     pen.setWidth(5);
     painter->setPen(pen);
 
-    painter->drawPoint(mPolygon.boundingRect().bottomRight());
+
+    painter->drawPoint(tpoly.boundingRect().bottomRight());
 
 
     painter->setPen(QPen(Qt::red));
-    painter->drawPolygon(mPolygon);
+
+
+    painter->drawPolygon(tpoly);
 }
 
 QRectF ShapeItem::boundingRect() const
 {
 
-    return mPolygon.boundingRect().adjusted(-20,-20,20,20);
+    return mTransform.map(mPolygon).boundingRect().adjusted(-20,-20,20,20);
 }
 
 void ShapeItem::setMode(ShapeItem::Mode mode)
@@ -78,8 +82,10 @@ void ShapeItem::setMode(ShapeItem::Mode mode)
 void ShapeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
-    QRect corner = QRect(mPolygon.boundingRect().bottomRight()-QPoint(5,5),
-                         mPolygon.boundingRect().bottomRight()+QPoint(5,5));
+    QPolygon tpoly = mTransform.map(mPolygon);
+
+    QRect corner = QRect(tpoly.boundingRect().bottomRight()-QPoint(5,5),
+                         tpoly.boundingRect().bottomRight()+QPoint(5,5));
 
     if (corner.contains(event->pos().toPoint()))
     {
@@ -103,18 +109,15 @@ void ShapeItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     if (mIsEditing)
     {
-        qDebug()<<"editing";
 
+        QPolygon tpoly = mTransform.map(mPolygon);
         QPoint diff = event->pos().toPoint() - mPolygon.boundingRect().bottomRight();
 
+        qreal sx = qreal(diff.x())/qreal(tpoly.boundingRect().width()) ;
+        qreal sy = qreal(diff.y())/qreal(tpoly.boundingRect().height()) ;
 
-        QTransform transform;
-        qreal sx = qreal(diff.x())/qreal(mPolygon.boundingRect().width()) + 1;
-        qreal sy = qreal(diff.y())/qreal(mPolygon.boundingRect().height()) + 1;
+        mTransform.scale(sx,sy);
 
-
-        transform.scale(sx,sy);
-        mPolygon = transform.map(mPolygon);
 
 
         update();

@@ -43,6 +43,7 @@ public:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 private:
     QPolygon mPolygon;
+    QTransform mTransform;
     bool mIsEditing;
     Mode mCurrentMode;
     int mEditingPointIndex;
