@@ -1,3 +1,6 @@
+#ifndef FCSFILE_H
+#define FCSFILE_H
+
 /***************************************************************************
 **                                                                        **
 **  FcsViewer, a simple cytometry data viewer made with Qt4 and           **
@@ -23,62 +26,62 @@
 **           Email  : sacha@labsquare.org                                 **
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
+#include <QFile>
+#include <QHash>
+#include <QString>
+#include <QVariantMap>
+#include <QtCore>
+#include "fcsdata.h"
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+/*!
+  Load and read data from a FCS file version 3.0
+*/
+class FcsFile;
+class FcsData;
+class FcsFile : public QFile
 {
-    Q_OBJECT
-    
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    FcsFile(const QString& fileName, QObject * parent = 0);
+    FcsFile(QObject * parent = 0);
 
+    //open file as binary mode
+    bool open();
+
+    //Return textSegment
+    const QVariantMap& textSegment() const ;
+
+    //Return return dataSegment
+    QVector<double> dataSegment() const;
+
+    //Return a copy a data
+    FcsData data() ;
+
+    //Return FCS file version
+    QString version();
+
+    //TextSegment getter
+    int parameterCount() const;
+    int eventCount() const ;
+    QDateTime aquisitionDate() const ;
 
 
 protected:
-    void setupActions();
+    int textBeginOffset() ;
+    int textEndOffset();
+    int dataBeginOffset();
+    int dataEndOffset();
+
+    void loadTextSegment();
+    void loadDataSegment();
 
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
+    QVariantMap mTextSegment;
+    QVector<double> mDataSegment;
 
 
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
 
 
 
 };
 
-#endif // MAINWINDOW_H
+#endif // FCSFILE_H

@@ -24,61 +24,35 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "colorbutton.h"
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+ColorButton::ColorButton(const QColor &color, QWidget *parent):
+    QToolButton(parent),mColor(color)
+{
+    connect(this,SIGNAL(clicked()),this,SLOT(getColor()));
+    setColor(color);
 }
 
-class MainWindow : public QMainWindow
+void ColorButton::setColor(const QColor &color)
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    mColor = color;
+    QPixmap pix(64,64);
+    pix.fill(color);
 
+    setIcon(QIcon(pix));
 
+    emit colorChanged(color);
 
-protected:
-    void setupActions();
+}
 
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
+const QColor &ColorButton::color()
+{
+    return mColor;
+}
 
-    QMdiArea * mArea;
+void ColorButton::getColor()
+{
+    QColor color = QColorDialog::getColor();
+    setColor(color);
 
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H
+}

@@ -24,61 +24,32 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COMMONPLOTPROPERTYWIDGET_H
+#define COMMONPLOTPROPERTYWIDGET_H
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+#include <QWidget>
+#include "scatterstylecombobox.h"
+#include "colorbutton.h"
+class DisplayPropertyWidget : public QWidget
 {
     Q_OBJECT
-    
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit DisplayPropertyWidget(QWidget *parent = 0);
+    ~DisplayPropertyWidget();
+
+signals:
+    void penChanged(const QPen& color);
+    void brushChanged(const QBrush& color);
     
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
-
-
-
-protected:
-    void setupActions();
-
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
+    ScatterStyleComboBox * mScatterCombo;
+    ColorButton * mPenColor;
+    ColorButton * mBrushColor;
 
-    QMdiArea * mArea;
+    QPen mPen;
+    QBrush mBrush;
 
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
+    
 };
 
-#endif // MAINWINDOW_H
+#endif // COMMONPLOTPROPERTYWIDGET_H

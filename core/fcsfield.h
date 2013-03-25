@@ -24,61 +24,41 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+#ifndef FCSFIELD_H
+#define FCSFIELD_H
+#include <QtCore>
+class FcsField
 {
-    Q_OBJECT
-    
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    FcsField();
+    const QString& name() const;
+    void setName(const QString& name);
+
+    const QString& label() const;
+    void setLabel(const QString& label);
+
+    int bitNumber() const;
+    void setBitNumber(int bit);
+
+    double gain() const;
+    void setGain(double gain);
+
+    double range() const;
+    void setRange(double range);
+
+    int voltage() const;
+    void setVoltage(int voltage);
 
 
-
-protected:
-    void setupActions();
 
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
+    QString mName;
+    QString mLabel;
+    int mBitNumber;
+    double mGain;
+    double mRange;
+    int mVoltage;
 
 };
 
-#endif // MAINWINDOW_H
+#endif // FCSFIELD_H

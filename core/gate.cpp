@@ -24,61 +24,73 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
 #include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+#include <QDebug>
+Gate::Gate(Gate *parent)
+    :QObject(parent),mName("not defined")
+
+{
+    setParent(parent);
+
 }
 
-class MainWindow : public QMainWindow
+Gate::~Gate()
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    qDebug()<<"destroy" <<this;
+    emit destroyed();
+    qDeleteAll(mChilds);
+
+}
+
+const FcsData &Gate::data() const
+{
+    return mData;
+}
+
+void Gate::setData(const FcsData &data)
+{
+    mData = data;
+}
+
+void Gate::appendChild(Gate *child)
+{
+    child->setParent(this);
+    mChilds.append(child);
+
+
+}
+void Gate::removeChild(Gate *child)
+{
+    mChilds.removeOne(child);
+}
+
+QList<Gate *> Gate::allChildren(Gate *parent) const
+{
+    QList<Gate*> list;
+    int i=0;
+    foreach ( QObject * obj , parent->children())
+    {
+        Gate * gate = qobject_cast<Gate*>(obj);
+        list.append(gate);
+        list.append(allChildren(gate));
+
+
+    }
+
+    return list;
+
+}
 
 
 
-protected:
-    void setupActions();
-
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
+void Gate::setName(const QString &name)
+{
+    mName = name;
+}
+const QString &Gate::name() const
+{
+    return mName;
+}
 
 
 
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H

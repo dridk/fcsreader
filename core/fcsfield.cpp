@@ -24,61 +24,70 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "fcsfield.h"
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+FcsField::FcsField():
+    mName("not defined"),mLabel("not defined"),
+    mBitNumber(16),mGain(0),mRange(0),mVoltage(0)
+{
 }
 
-class MainWindow : public QMainWindow
+const QString &FcsField::name() const
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    return mName;
+}
 
+void FcsField::setName(const QString &name)
+{
+    mName = name;
+}
 
+const QString &FcsField::label() const
+{
+    return mLabel;
+}
 
-protected:
-    void setupActions();
+void FcsField::setLabel(const QString &label)
+{
+    mLabel = label;
+}
 
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
+int FcsField::bitNumber() const
+{
+    return mBitNumber;
+}
 
-    QMdiArea * mArea;
+void FcsField::setBitNumber(int bit)
+{
+    mBitNumber = bit;
+}
 
+double FcsField::gain() const
+{
+    return mGain;
+}
 
+void FcsField::setGain(double gain)
+{
+    mGain = gain;
+}
 
+double FcsField::range() const
+{
+    return mRange;
+}
 
+void FcsField::setRange(double range)
+{
+    mRange = range;
+}
 
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
+int FcsField::voltage() const
+{
+    return mVoltage;
+}
 
-
-
-};
-
-#endif // MAINWINDOW_H
+void FcsField::setVoltage(int voltage)
+{
+    mVoltage = voltage;
+}

@@ -24,61 +24,33 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PROPERTYWIDGETCONTAINER_H
+#define PROPERTYWIDGETCONTAINER_H
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+#include <QWidget>
+#include <QtGui>
+class PropertyWidgetContainer : public QWidget
 {
     Q_OBJECT
-    
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit PropertyWidgetContainer(QWidget *parent = 0);
     
+
 public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    void setTitle(const QString& title);
+    void setIcon(const QIcon& icon);
+    void setWidget(QWidget * widget);
+    void expand(bool expand = true);
+    void collapse(bool collapse = true);
 
 
-
-protected:
-    void setupActions();
 
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
+    QWidget * mContent;
+    QLabel * mTitleLabel;
+    QLabel * mIconLabel;
+    QToolButton * mToolButton;
+    
 };
 
-#endif // MAINWINDOW_H
+#endif // PROPERTYWIDGETCONTAINER_H

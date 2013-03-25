@@ -24,61 +24,45 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
+#ifndef FCSDATA_H
+#define FCSDATA_H
+#include <QtCore>
+#include "fcsfield.h"
 #include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class FcsData;
+typedef QMap<QString,FcsData> FcsDataMap;
+class FcsData
 {
-    Q_OBJECT
-    
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    FcsData();
+    double value(int row, int column) const;
+    double value(int index) const;
+    QVector <double> row(int row) const;
+    QVector <double> column(int column)const;
+    int rowCount() const;
+    int columnCount() const;
+    int size() const;
+    void selectAll();
+    void select(int row);
+    void clear();
 
+    //Statistics computation
+    double average(int column) const;
+    double variance(int column) const;
+    double standardDeviation(int column) const;
+    double cv(int column) const;
 
+    const QList<FcsField>& fields() const {return mFields;}
 
-protected:
-    void setupActions();
 
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
+    QList<int> mIndex;
+    QVector<double> * mDatas;
+    QList<FcsField> mFields;
+    //enable FcsFile to load data inside
+    friend class FcsFile;
 
 
 };
 
-#endif // MAINWINDOW_H
+#endif // FCSDATA_H

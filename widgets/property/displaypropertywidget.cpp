@@ -24,61 +24,41 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "displaypropertywidget.h"
+#include <QFormLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QtGui>
+DisplayPropertyWidget::DisplayPropertyWidget(QWidget *parent) :
+    QWidget(parent)
+{
+    setWindowTitle("Display");
+    setWindowIcon(QIcon(":brush.png"));
+    QGridLayout * layout = new QGridLayout;
+    mScatterCombo = new ScatterStyleComboBox;
+    mPenColor = new ColorButton;
+    mBrushColor = new ColorButton;
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+
+    QGroupBox * brushBox = new QGroupBox("brush");
+    QGroupBox * penBox = new QGroupBox("pen");
+
+    brushBox->setLayout(new QFormLayout);
+    brushBox->layout()->addWidget(new QPushButton);
+
+    layout->addWidget(new QLabel("point style"),0,0);
+    layout->addWidget(mScatterCombo,0,1);
+
+
+
+
+    setLayout(layout);
+
+
 }
 
-class MainWindow : public QMainWindow
+
+DisplayPropertyWidget::~DisplayPropertyWidget()
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
-
-
-
-protected:
-    void setupActions();
-
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H
+    delete mScatterCombo;
+}

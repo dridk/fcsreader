@@ -24,61 +24,61 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "dotplotpropertywidget.h"
+#include <QFormLayout>
+#include <QLocale>
+DotPlotPropertyWidget::DotPlotPropertyWidget(Gate *rootGate, QWidget *parent) :
+    QWidget(parent)
+{
+    setWindowTitle("Data");
+    setWindowIcon(QIcon(":edit.png"));
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+    mRootGate = rootGate;
+    mXFieldComboBox = new QComboBox;
+    mYFieldComboBox = new QComboBox;
+    mXLabel = new QLineEdit;
+    mYLabel = new QLineEdit;
+
+    QFormLayout * layout = new QFormLayout;
+
+    layout->addRow(tr("X-Data"), mXFieldComboBox);
+    layout->addRow(tr("Y-Data"), mYFieldComboBox);
+    layout->addRow(tr("X-Label"), mXLabel);
+    layout->addRow(tr("Y-Label"), mYLabel);
+
+    setLayout(layout);
+    loadCombo();
+
+    connect(mXFieldComboBox,SIGNAL(currentIndexChanged(int)),this,SIGNAL(xFieldChanged(int)));
+    connect(mYFieldComboBox,SIGNAL(currentIndexChanged(int)),this,SIGNAL(yFieldChanged(int)));
+
+    connect(mXLabel,SIGNAL(textEdited(QString)),this,SIGNAL(xLabelChanged(QString)));
+    connect(mYLabel,SIGNAL(textEdited(QString)),this,SIGNAL(yLabelChanged(QString)));
+
+
 }
 
-class MainWindow : public QMainWindow
+DotPlotPropertyWidget::~DotPlotPropertyWidget()
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    delete mXFieldComboBox;
+    delete mYFieldComboBox;
+
+}
+
+void DotPlotPropertyWidget::loadCombo()
+{
 
 
-
-protected:
-    void setupActions();
-
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
+    foreach (FcsField field, mRootGate->data().fields())
+    {
+        mXFieldComboBox->addItem(field.name());
+        mYFieldComboBox->addItem(field.name());
+    }
 
 
 
 
 
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
 
 
-
-};
-
-#endif // MAINWINDOW_H
+}

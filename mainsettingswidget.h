@@ -24,61 +24,33 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINSETTINGSWIDGET_H
+#define MAINSETTINGSWIDGET_H
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
+#include <QWidget>
+#include <QList>
+#include <QModelIndex>
+#include "abstractsettingswidget.h"
 namespace Ui {
-class MainWindow;
+class MainSettingsWidget;
 }
 
-class MainWindow : public QMainWindow
+class MainSettingsWidget : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit MainSettingsWidget(QWidget *parent = 0);
+    ~MainSettingsWidget();
+    void append(AbstractSettingsWidget * widget);
     
 public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    void showSettings(QModelIndex index);
 
-
-
-protected:
-    void setupActions();
 
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
+    Ui::MainSettingsWidget *ui;
+    QList<AbstractSettingsWidget*> mSettingsWidgets;
 };
 
-#endif // MAINWINDOW_H
+#endif // MAINSETTINGSWIDGET_H

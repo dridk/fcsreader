@@ -6,23 +6,24 @@
 
 QT       += core gui
 TARGET = fcsViewer
-TEMPLATE = app
 
 
 
-SOURCES *= *.cpp
 
+RESOURCES +=  icons/icons.qrc
 
-HEADERS  *= *.h \
-    gateitem.h \
-    fcsmodeltable.h \
-    gatelist.h
+SOURCES +=     main.cpp \
+    mainwindow.cpp
 
 
 
-FORMS    += \
+include(core/core.pri)
+include(widgets/widgets.pri)
+include(widgets/plots/plots.pri)
+include(widgets/property/property.pri)
+
+HEADERS += \
+    mainwindow.h
+
+FORMS += \
     mainwindow.ui
-
-RESOURCES += \
-    icons/icons.qrc
-

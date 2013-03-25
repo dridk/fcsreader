@@ -24,61 +24,37 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "propertylistwidget.h"
+#include <QtGui>
+#include <QDebug>
+PropertyListWidget::PropertyListWidget(QWidget *parent) :
+    QScrollArea(parent)
+{
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+    mContent = new QWidget;
+    mContentLayout = new QVBoxLayout;
+    mContentLayout->setContentsMargins(0,0,0,0);
+    mContentLayout->setSpacing(0);
+    mContentLayout->addStretch();
+    mContent->setLayout(mContentLayout);
+    setWidgetResizable(true);
+    setWidget(mContent);
+
 }
 
-class MainWindow : public QMainWindow
+void PropertyListWidget::addWidget(QWidget *widget)
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+
+    PropertyWidgetContainer * container = new PropertyWidgetContainer;
+    container->setWidget(widget);
+    mContentLayout->insertWidget(0,container);
 
 
-
-protected:
-    void setupActions();
-
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
+    mContent = new QWidget;
+    mContent->setLayout(mContentLayout);
 
 
+    setWidget(mContent);
 
 
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H
+}

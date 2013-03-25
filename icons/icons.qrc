@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file alias="scatter.png">Actions-office-chart-scatter-icon.png</file>
         <file alias="histogram.png">Actions-office-chart-area-icon.png</file>
+        <file>data_configuration.png</file>
+        <file>edit.png</file>
+        <file>brush.png</file>
     </qresource>
 </RCC>

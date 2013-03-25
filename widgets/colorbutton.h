@@ -24,61 +24,31 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COLORBUTTON_H
+#define COLORBUTTON_H
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+#include <QPushButton>
+#include <QToolButton>
+#include <QColorDialog>
+class ColorButton : public QToolButton
 {
     Q_OBJECT
-    
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
+    explicit ColorButton(const QColor& color = Qt::white, QWidget *parent = 0);
+
 public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    void setColor(const QColor& color);
+    const QColor& color();
 
+signals:
+    void colorChanged(const QColor& color);
 
-
-protected:
-    void setupActions();
+protected slots:
+    void getColor();
 
 private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
+    QColor mColor;
+    
 };
 
-#endif // MAINWINDOW_H
+#endif // COLORBUTTON_H

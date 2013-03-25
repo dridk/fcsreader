@@ -24,61 +24,39 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "mainsettingswidget.h"
+#include "ui_mainsettingswidget.h"
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+MainSettingsWidget::MainSettingsWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::MainSettingsWidget)
+{
+    ui->setupUi(this);
+
+    connect(ui->listWidget,SIGNAL(activated(QModelIndex)),this,SLOT(showSettings(QModelIndex)));
 }
 
-class MainWindow : public QMainWindow
+MainSettingsWidget::~MainSettingsWidget()
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    delete ui;
+}
+
+void MainSettingsWidget::append(AbstractSettingsWidget *widget)
+{
+
+    mSettingsWidgets.append(widget);
+    QListWidgetItem * item = new QListWidgetItem;
+    item->setText(widget->windowTitle());
+    item->setIcon(widget->windowIcon());
+    ui->listWidget->addItem(item);
 
 
+}
 
-protected:
-    void setupActions();
+void MainSettingsWidget::showSettings(QModelIndex index)
+{
 
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
+    ui->stackedWidget->setCurrentWidget(mSettingsWidgets.at(index.row()));
 
 
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H
+}

@@ -24,61 +24,76 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "propertywidgetcontainer.h"
+#include <QtGui>
+PropertyWidgetContainer::PropertyWidgetContainer(QWidget *parent) :
+    QWidget(parent)
+{
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->setSpacing( 0 );
+    layout->setContentsMargins( 0, 0, 0, 0 );
+    setLayout( layout );
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+    QHBoxLayout * headerLayout = new QHBoxLayout;
+    QFrame * header = new QFrame;
+    header->setFrameShape( QFrame::Panel );
+    header->setFrameShadow( QFrame::Raised );
+
+    header->setLayout(headerLayout);
+    mToolButton = new QToolButton;
+    mTitleLabel = new QLabel("no title");
+    mIconLabel = new QLabel;
+    mIconLabel->setFixedSize(16,16);
+    mToolButton->setArrowType(Qt::DownArrow);
+    mToolButton->setCheckable(true);
+    mToolButton->setChecked(true);
+    headerLayout->addWidget(mIconLabel);
+    headerLayout->addWidget(mTitleLabel);
+    headerLayout->addWidget(mToolButton);
+//    header->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    headerLayout->setContentsMargins(2,0,0,0);
+
+    layout->addWidget(header);
+
+    mContent = new QWidget;
+    QVBoxLayout * contentLayout = new QVBoxLayout;
+    contentLayout->setContentsMargins(0,0,0,0);
+    mContent->setLayout(contentLayout);
+
+    layout->addWidget(mContent);
+
+
+    connect(mToolButton,SIGNAL(toggled(bool)),this,SLOT(collapse(bool)));
+
+
 }
 
-class MainWindow : public QMainWindow
+void PropertyWidgetContainer::setTitle(const QString &title)
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    mTitleLabel->setText(title);
+}
 
+void PropertyWidgetContainer::setIcon(const QIcon &icon)
+{
+    mIconLabel->setPixmap(icon.pixmap(16,16));
+}
 
+void PropertyWidgetContainer::setWidget(QWidget *widget)
+{
 
-protected:
-    void setupActions();
+    mContent->layout()->addWidget(widget);
+    setTitle(widget->windowTitle());
+    setIcon(widget->windowIcon());
 
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
+}
 
-    QMdiArea * mArea;
+void PropertyWidgetContainer::expand(bool expand)
+{
+       mContent->setVisible(!expand);
+}
 
+void PropertyWidgetContainer::collapse(bool collapse)
+{
 
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H
+    mContent->setVisible(collapse);
+}

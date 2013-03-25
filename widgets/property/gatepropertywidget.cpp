@@ -24,61 +24,37 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "gatepropertywidget.h"
+#include <QFormLayout>
+GatePropertyWidget::GatePropertyWidget(Gate *rootGate, QWidget *parent) :
+    QWidget(parent)
+{
+    mRootGate = rootGate;
+    QFormLayout * layout = new QFormLayout;
+    mGateComboBox = new QComboBox;
+    setLayout(layout);
 
-#include <QMainWindow>
-#include <QMdiArea>
-#include <QActionGroup>
-#include "fcsfile.h"
-#include "gate.h"
-#include "statisticswidget.h"
-#include "gatetreewidget.h"
-namespace Ui {
-class MainWindow;
+    layout->addRow("Source Data", mGateComboBox);
+
+    loadCombo();
+
+    setWindowTitle(tr("Gate source"));
+    setWindowIcon(QIcon(":data_configuration.png"));
+
+
+
 }
 
-class MainWindow : public QMainWindow
+GatePropertyWidget::~GatePropertyWidget()
 {
-    Q_OBJECT
-    
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
-public slots:
- void open();
- void addDotPlot();
- void showStatistics();
- void subWindowActivated(QMdiSubWindow * sub);
+    delete mGateComboBox;
+}
 
+void GatePropertyWidget::loadCombo()
+{
+    mGateComboBox->addItem(mRootGate->name());
 
+    foreach (Gate * gate, mRootGate->allChildren(mRootGate))
+        mGateComboBox->addItem(gate->name());
 
-protected:
-    void setupActions();
-
-private:
-    Ui::MainWindow *ui;
-    FcsFile mFile;
-    Gate * mRootGate;
-    StatisticsWidget * mStatWidget;
-    GateTreeWidget * mGateTreeWidget;
-    QDockWidget * mOptionDockWidget;
-
-    QMdiArea * mArea;
-
-
-
-
-
-//    FcsFile mFile;
-//    FcsInfoWidget * mInfoWidget;
-//    FcsModelTable * mTableView;
-//    FcsModel * mModel;
-//    GateList mGates;
-
-
-
-};
-
-#endif // MAINWINDOW_H
+}
