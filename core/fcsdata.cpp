@@ -35,13 +35,13 @@ FcsData::FcsData()
 */
 double FcsData::value(int row, int column) const
 {
-    int dataIndex = mIndex.at(columnCount() * row + column);
+    int dataIndex = mIndexes.at(columnCount() * row + column);
     return mDatas->value(dataIndex, -1);
 }
 
 double FcsData::value(int index) const
 {
-    return mDatas->value(mIndex.at(index));
+    return mDatas->value(mIndexes.at(index));
 }
 
 /*!
@@ -61,7 +61,7 @@ QVector<double> FcsData::row(int row) const
 QVector<double> FcsData::column(int column) const
 {
     QVector <double> data;
-    for (int index = column ; index < mIndex.size(); index+=columnCount())
+    for (int index = column ; index < mIndexes.size(); index+=columnCount())
     {
         data.append(value(index));
     }
@@ -74,7 +74,7 @@ QVector<double> FcsData::column(int column) const
 int FcsData::rowCount() const
 {
     Q_ASSERT_X(columnCount() != 0, "", "division by zero");
-    return mIndex.size()/columnCount();
+    return mIndexes.size()/columnCount();
 }
 /*!
   Returns column count of data
@@ -89,16 +89,16 @@ int FcsData::columnCount() const
 int FcsData::size() const
 {
     Q_ASSERT_X(columnCount() != 0, "", "division by zero");
-    return mIndex.size();
+    return mIndexes.size();
 }
 /*!
  Select all data from Fcs file
 */
 void FcsData::selectAll()
 {
-    mIndex.clear();
+    mIndexes.clear();
     for (int i=0; i<mDatas->size(); ++i)
-        mIndex.append(i);
+        mIndexes.append(i);
 }
 /*!
  Select data at row from Fcs file
@@ -106,14 +106,14 @@ void FcsData::selectAll()
 void FcsData::select(int row)
 {
     for (int i=row * columnCount(); i< row*columnCount() + columnCount(); ++i)
-        mIndex.append(i);
+        mIndexes.append(i);
 }
 /*!
  Unselect all data from fcs file
 */
 void FcsData::clear()
 {
-    mIndex.clear();
+    mIndexes.clear();
 }
 /*!
  Statitics : Compute the average from column
@@ -140,14 +140,14 @@ double FcsData::variance(int column) const
         sum += (val - avg) *(val - avg) ;
 
     }
-        return sum/rowCount();
+    return sum/rowCount();
 }
 /*!
  Statitics : Compute the standard deviation from column
 */
 double FcsData::standardDeviation(int column) const
 {
-   return sqrt(variance(column));
+    return sqrt(variance(column));
 }
 /*!
  Statitics : Compute the coeficient of variation from column
@@ -156,3 +156,18 @@ double FcsData::cv(int column) const
 {
     return standardDeviation(column) / average(column);
 }
+
+//This functions write indexes , using to create sub gate Data
+void FcsData::setRows(const QList<int> &rows)
+{
+    mIndexes.clear();
+    foreach ( int row , rows)
+    {
+        for (int i=columnCount() * row; i<columnCount() * row + columnCount(); ++i){
+            mIndexes.append(i);
+        }
+    }
+
+}
+
+

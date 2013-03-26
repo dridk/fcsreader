@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     //    statDockWidget->setWidget(mStatWidget);
-    //    gateDockWidget->setWidget(mGateTreeWidget);
+    gateDockWidget->setWidget(mGateTreeWidget);
 
     addDockWidget(Qt::LeftDockWidgetArea,statDockWidget);
     addDockWidget(Qt::LeftDockWidgetArea,gateDockWidget);
@@ -130,8 +130,12 @@ MainWindow::~MainWindow()
 void MainWindow::open()
 {
 
+//    QString filename = QFileDialog::getOpenFileName();
+//    mFile.setFileName(filename);
 
-    mFile.setFileName("/home/schutz/example.LMD");
+     mFile.setFileName("/home/schutz/example.LMD");
+
+
     if(mFile.open()){
         statusBar()->showMessage(mFile.fileName());
         mRootGate->setData(mFile.data());
@@ -149,11 +153,14 @@ void MainWindow::addDotPlot()
 
     DotPlotWidget * widget = new DotPlotWidget(mRootGate);
     QMdiSubWindow * sub = new QMdiSubWindow;
+   // connect(widget,SIGNAL(destroyed()),sub,SLOT(close()));
     sub->setWidget(widget);
     mOptionDockWidget->setVisible(true);
     mArea->addSubWindow(sub);
     widget->replot();
     sub->show();
+
+    connect(sub,SIGNAL(destroyed()),sub,SLOT(close()));
 
 }
 

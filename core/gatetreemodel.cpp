@@ -26,11 +26,14 @@
 
 #include "gatetreemodel.h"
 #include <QObject>
+#include <QIcon>
 GateTreeModel::GateTreeModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
     mRootItem = new Gate;
     mRootItem->setName("root");
+
+
 }
 
 GateTreeModel::~GateTreeModel()
@@ -64,12 +67,22 @@ QVariant GateTreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole)
-        return QVariant();
+
 
     Gate *item = static_cast<Gate*>(index.internalPointer());
 
+    if ( role == Qt::DisplayRole)
     return item->name();
+
+    if (role == Qt::DecorationRole)
+    {
+        QPixmap pix(32,32);
+        pix.fill(item->color());
+        return QIcon(pix);
+    }
+
+
+    return QVariant();
 
 }
 
@@ -118,6 +131,14 @@ void GateTreeModel::setGate(Gate *gate)
 {
     qDeleteAll (mRootItem->children());
     mRootItem->appendChild(gate);
+    connect(gate,SIGNAL(changed()),this,SIGNAL(modelReset()));
+
     reset();
 }
+
+void GateTreeModel::test()
+{
+    qDebug()<<"test";
+}
+
 

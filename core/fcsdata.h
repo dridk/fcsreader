@@ -54,9 +54,11 @@ public:
 
     const QList<FcsField>& fields() const {return mFields;}
 
+    void setRows(const QList<int>& rows);
+
 
 private:
-    QList<int> mIndex;
+    QList<int> mIndexes;
     QVector<double> * mDatas;
     QList<FcsField> mFields;
     //enable FcsFile to load data inside

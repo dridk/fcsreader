@@ -29,25 +29,47 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
-class ShapeItem : public QAbstractGraphicsShapeItem
+#include "gate.h"
+class ShapeItem : public QGraphicsObject
 {
+    Q_OBJECT
 public:
     enum Mode {ShapeMode, NodeMode};
-    ShapeItem(QGraphicsItem * parent = 0);
+    ShapeItem(const QPolygon& polygon = QPolygon(),QGraphicsItem * parent = 0);
+    ~ShapeItem();
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual QRectF boundingRect() const;
     void setMode(Mode mode);
+    void setColor(const QColor& color);
+    const QColor& color() const;
+
+    void setPolygon(const QPolygon& polygon);
+    const QPolygon& polygon() const;
     Mode mode() {return mCurrentMode;}
+
+
+    void setGate(Gate * gate);
+    Gate * gate() const;
+signals:
+    void changed();
+
+
+protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+
+
 private:
     QPolygon mPolygon;
     QPolygon mEditPolygon;
+    QColor mColor;
     bool mIsEditing;
     Mode mCurrentMode;
     int mCurrentPointIndex;
+    Gate * mGate;
 };
 
 #endif // SHAPEITEM_H

@@ -22,6 +22,8 @@ AbstractPlotWidget::AbstractPlotWidget(Gate *rootGate, QWidget *parent) :
 
     setupProperty();
 
+    connect(mGatePropertyWidget,SIGNAL(gateChanged(Gate*)),this,SLOT(setGate(Gate*)));
+
 
 
 }
@@ -40,11 +42,22 @@ const QString &AbstractPlotWidget::title() const
 void AbstractPlotWidget::setGate(Gate *rootGate)
 {
     mRootGate = rootGate;
+    replot();
 }
+
+void AbstractPlotWidget::test()
+{
+
+    qDebug()<<"besoin de suppression";
+
+}
+
 
 Gate *AbstractPlotWidget::rootGate()
 {
+    if (mRootGate)
     return mRootGate;
+    else return NULL;
 }
 
 

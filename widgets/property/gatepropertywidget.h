@@ -37,11 +37,17 @@ public:
     explicit GatePropertyWidget(Gate * rootGate, QWidget *parent = 0);
     ~GatePropertyWidget();
 
-protected:
+
+signals:
+    void gateChanged(Gate* gate);
+
+protected slots:
     void loadCombo();
+    void emitGate();
 private:
     QComboBox * mGateComboBox;
     Gate * mRootGate;
+
     
 };
 

@@ -26,19 +26,24 @@
 
 #include "gate.h"
 #include <QDebug>
-Gate::Gate(Gate *parent)
+Gate::Gate( Gate *parent)
     :QObject(parent),mName("not defined")
 
 {
     setParent(parent);
 
+
+
 }
+
 
 Gate::~Gate()
 {
     qDebug()<<"destroy" <<this;
-    emit destroyed();
     qDeleteAll(mChilds);
+
+    emit destroyed();
+
 
 }
 
@@ -56,12 +61,15 @@ void Gate::appendChild(Gate *child)
 {
     child->setParent(this);
     mChilds.append(child);
+    emit changed();
+    connect(child,SIGNAL(destroyed()),this,SIGNAL(changed()));
 
 
 }
 void Gate::removeChild(Gate *child)
 {
     mChilds.removeOne(child);
+    emit changed();
 }
 
 QList<Gate *> Gate::allChildren(Gate *parent) const
@@ -71,13 +79,24 @@ QList<Gate *> Gate::allChildren(Gate *parent) const
     foreach ( QObject * obj , parent->children())
     {
         Gate * gate = qobject_cast<Gate*>(obj);
+        if (gate){
         list.append(gate);
         list.append(allChildren(gate));
-
+        }
 
     }
 
     return list;
+
+}
+
+QList<Gate *> Gate::all()
+{
+   QList<Gate*> gates;
+   gates.append(this);
+   gates.append(allChildren(this));
+
+   return gates;
 
 }
 
@@ -90,6 +109,17 @@ void Gate::setName(const QString &name)
 const QString &Gate::name() const
 {
     return mName;
+}
+
+void Gate::setColor(const QColor &color)
+{
+    mColor = color;
+    emit changed();
+}
+
+const QColor &Gate::color() const
+{
+    return mColor;
 }
 
 

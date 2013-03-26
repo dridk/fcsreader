@@ -30,30 +30,38 @@
 #include <QObject>
 #include "fcsdata.h"
 #include <QList>
+#include <QColor>
 class Gate;
 class Gate : public QObject
 {
     Q_OBJECT
 public:
-    explicit Gate(Gate * parent =0);
+    Gate(Gate * parent =0);
+
     ~Gate();
     const FcsData& data() const;
     void setData(const FcsData& data);
     void appendChild(Gate * child);
     void removeChild(Gate * child);
     QList<Gate*> allChildren(Gate * parent) const;
+    QList<Gate*> all();
 
     void setName(const QString& name);
     const QString& name() const;
 
+    void setColor(const QColor& color);
+    const QColor& color() const;
+
+
 
 signals:
-
+    void changed();
 
 private:
     QString mName;
     QList <Gate*> mChilds;
     FcsData mData;
+    QColor mColor;
 
 
 

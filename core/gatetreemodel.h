@@ -42,6 +42,9 @@ public:
     QModelIndex parent(const QModelIndex &child) const;
     void setGate(Gate * gate);
 
+public slots:
+    void test();
+
 private:
     Gate * mRootItem;
     

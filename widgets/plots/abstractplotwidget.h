@@ -28,7 +28,6 @@ public:
     void setTitle(const QString& title);
     const QString& title() const;
 
-    void setGate(Gate * rootGate);
     Gate * rootGate();
 
     PropertyListWidget * propertyListWidget() {return mPropertyWidget;}
@@ -37,7 +36,9 @@ public:
 
 public slots:
     virtual void replot() = 0;
+    void setGate(Gate * rootGate);
 
+    void test();
 
 
 

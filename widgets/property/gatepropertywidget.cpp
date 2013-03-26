@@ -40,8 +40,8 @@ GatePropertyWidget::GatePropertyWidget(Gate *rootGate, QWidget *parent) :
 
     setWindowTitle(tr("Gate source"));
     setWindowIcon(QIcon(":data_configuration.png"));
-
-
+    connect(mRootGate,SIGNAL(changed()),this,SLOT(loadCombo()));
+    connect(mGateComboBox,SIGNAL(activated(int)),this,SLOT(emitGate()));
 
 }
 
@@ -52,9 +52,30 @@ GatePropertyWidget::~GatePropertyWidget()
 
 void GatePropertyWidget::loadCombo()
 {
-    mGateComboBox->addItem(mRootGate->name());
 
-    foreach (Gate * gate, mRootGate->allChildren(mRootGate))
-        mGateComboBox->addItem(gate->name());
+    mGateComboBox->clear();
+    QList<Gate*> allGate = mRootGate->all();
+
+    foreach (Gate * gate, allGate)
+    {
+        if (gate)
+        {
+            QPixmap pix(32,32);
+            pix.fill(gate->color());
+            mGateComboBox->addItem(QIcon(pix),gate->name());
+        }
+    }
+
+
+
+}
+
+void GatePropertyWidget::emitGate()
+{
+
+    Gate * gate = mRootGate->all().at(mGateComboBox->currentIndex());
+    if (gate)
+        emit gateChanged(gate);
+
 
 }

@@ -29,24 +29,30 @@
 #include <QDebug>
 #include <QCursor>
 #include <QGraphicsScene>
-ShapeItem::ShapeItem( QGraphicsItem * parent ):
-    QAbstractGraphicsShapeItem(parent)
+ShapeItem::ShapeItem( const QPolygon &polygon, QGraphicsItem *parent ):
+    QGraphicsObject(parent)
 {
     mIsEditing = false;
     mCurrentPointIndex = 0;
     mCurrentMode = ShapeMode;
+    mColor = Qt::red;
+    mGate = NULL;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
 
-    mPolygon.append(QPoint(50,0));
-    mPolygon.append(QPoint(0,200));
-    mPolygon.append(QPoint(100,100));
 
 
-    setBrush(QBrush(Qt::red));
+    setPolygon(polygon);
 
 
 
+
+
+}
+
+ShapeItem::~ShapeItem()
+{
+    delete mGate;
 }
 
 void ShapeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -60,49 +66,48 @@ void ShapeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         poly = mPolygon;
 
     painter->setCompositionMode(QPainter::CompositionMode_Plus);
-    painter->setPen(QPen(brush().color().darker()));
-    QColor col = brush().color();
-
-    painter->setBrush(QBrush(col));
+    painter->setPen(QPen(Qt::transparent));
+    painter->setBrush(QBrush(color()));
     painter->drawPolygon(poly);
 
     painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 
     painter->setBrush(QBrush(Qt::transparent));
-    painter->setPen(QPen(col.darker()));
+    painter->setPen(QPen(color().darker()));
 
     painter->drawPolygon(poly);
 
     //Draw bounding rect selector
-    QPen myPen;
-    myPen.setStyle(Qt::DashLine);
-    myPen.setColor(Qt::darkGray);
+    if (isSelected()){
+        QPen myPen;
+        myPen.setStyle(Qt::DashLine);
+        myPen.setColor(Qt::darkGray);
 
-    myPen.setWidth(1);
-    painter->setBrush(Qt::transparent);
-    painter->setPen(myPen);
-    painter->drawRect(poly.boundingRect());
+        myPen.setWidth(1);
+        painter->setBrush(Qt::transparent);
+        painter->setPen(myPen);
+        painter->drawRect(poly.boundingRect());
 
-    //define node or resize grip
-    myPen.setStyle(Qt::SolidLine);
-    myPen.setColor(Qt::black);
-    myPen.setWidth(5);
-    painter->setPen(myPen);
+        //define node or resize grip
+        myPen.setStyle(Qt::SolidLine);
+        myPen.setColor(Qt::black);
+        myPen.setWidth(5);
+        painter->setPen(myPen);
 
-    if (mode() == ShapeMode)
-    {
-        //draw grip for resizing
-        painter->drawPoint(poly.boundingRect().bottomRight());
+        if (mode() == ShapeMode)
+        {
+            //draw grip for resizing
+            painter->drawPoint(poly.boundingRect().bottomRight());
+        }
+
+        if (mode() == NodeMode)
+        {
+            //draw nodes
+            foreach (QPoint p, poly)
+                painter->drawPoint(p);
+        }
+
     }
-
-    if (mode() == NodeMode)
-    {
-        //draw nodes
-        foreach (QPoint p, poly)
-            painter->drawPoint(p);
-    }
-
-
 
 
 }
@@ -122,10 +127,48 @@ void ShapeItem::setMode(ShapeItem::Mode mode)
     mCurrentMode = mode;
 }
 
+void ShapeItem::setColor(const QColor &color)
+{
+    mColor = color;
+    update();
+}
+
+const QColor &ShapeItem::color() const
+{
+    return mColor;
+}
+
+void ShapeItem::setPolygon(const QPolygon &polygon)
+{
+    mPolygon = polygon;
+    update();
+    emit changed();
+
+}
+
+const QPolygon &ShapeItem::polygon() const
+{
+    return mPolygon;
+}
+
+void ShapeItem::setGate(Gate *gate)
+{
+    mGate = gate;
+    mGate->setColor(color());
+}
+
+Gate *ShapeItem::gate() const
+{
+    return mGate;
+}
+
 void ShapeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
     QList<QPoint> points;
+
+    scene()->clearSelection();
+    setSelected(true);
 
     if (mode() == ShapeMode)
         points.append(mPolygon.boundingRect().bottomRight());
@@ -159,7 +202,7 @@ void ShapeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     setMode(mCurrentMode == ShapeMode ? NodeMode : ShapeMode);
     update();
-    QAbstractGraphicsShapeItem::mouseDoubleClickEvent(event);
+    QGraphicsObject::mouseDoubleClickEvent(event);
 }
 
 void ShapeItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -195,7 +238,7 @@ void ShapeItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 
     else
-        QGraphicsItem::mouseMoveEvent(event);
+        QGraphicsObject::mouseMoveEvent(event);
 
 
 
@@ -208,11 +251,14 @@ void ShapeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (mIsEditing)
     {
         mIsEditing= false;
-        mPolygon = mEditPolygon;
+        setPolygon(mEditPolygon);
         setCursor(Qt::ArrowCursor);
 
     }
-    else
-        QGraphicsItem::mouseReleaseEvent(event);
-
+    else {
+        emit changed();
+        QGraphicsObject::mouseReleaseEvent(event);
+    }
 }
+
+

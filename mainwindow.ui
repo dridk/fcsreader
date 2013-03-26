@@ -141,11 +141,17 @@
    </property>
   </action>
   <action name="actionDotplot">
+   <property name="icon">
+    <iconset resource="icons/icons.qrc">
+     <normaloff>:/scatter_plot-26.png</normaloff>:/scatter_plot-26.png</iconset>
+   </property>
    <property name="text">
     <string>dotplot</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

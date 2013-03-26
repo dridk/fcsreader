@@ -5,5 +5,8 @@
         <file>data_configuration.png</file>
         <file>edit.png</file>
         <file>brush.png</file>
+        <file>scatter_plot-26.png</file>
+        <file>timeline.png</file>
+        <file>radar_plot-26.png</file>
     </qresource>
 </RCC>
