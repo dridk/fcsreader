@@ -29,7 +29,7 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
-class ShapeItem : public QGraphicsItem
+class ShapeItem : public QAbstractGraphicsShapeItem
 {
 public:
     enum Mode {ShapeMode, NodeMode};
@@ -37,16 +37,17 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual QRectF boundingRect() const;
     void setMode(Mode mode);
+    Mode mode() {return mCurrentMode;}
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 private:
     QPolygon mPolygon;
-    QTransform mTransform;
+    QPolygon mEditPolygon;
     bool mIsEditing;
     Mode mCurrentMode;
-    int mEditingPointIndex;
+    int mCurrentPointIndex;
 };
 
 #endif // SHAPEITEM_H

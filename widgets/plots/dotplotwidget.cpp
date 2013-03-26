@@ -17,7 +17,7 @@ DotPlotWidget::DotPlotWidget(Gate *rootGate, QWidget *parent):
     mYField = 1;
     mPropertyWidget = new DotPlotPropertyWidget(rootGate);
 
-    plot()->graph()->setPen(QPen(Qt::blue));
+    plot()->graph()->setPen(QPen(Qt::black));
     plot()->xAxis->setRange(0,1024);
     plot()->yAxis->setRange(0,1024);
     plot()->graph()->setLineStyle(QCPGraph::lsNone);
