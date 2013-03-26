@@ -102,7 +102,7 @@ FcsData FcsFile::data()
 
     }
 
-    fcsData.selectAll();
+//    fcsData.selectAll();
     return fcsData;
 
 }

@@ -9,7 +9,9 @@
 #include <QTableView>
 #include <QStandardItemModel>
 
-#include "mainwindow.h"
+//#include "mainwindow.h"
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -29,8 +31,8 @@ int main(int argc, char *argv[])
 
 //    table->show();
 
-    MainWindow mainwindow;
-    mainwindow.show();
+//    MainWindow mainwindow;
+//    mainwindow.show();
 
 
 

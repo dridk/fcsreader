@@ -24,53 +24,21 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef FCSDATA_H
-#define FCSDATA_H
-#include <QtCore>
-#include "fcsfield.h"
-#include "fcsfile.h"
 #include "fcsevent.h"
-class FcsData;
-typedef QMap<QString,FcsData> FcsDataMap;
-class FcsData
+
+FcsEvent::FcsEvent()
+    :mSources(0)
 {
-public:
-    FcsData();
-    FcsEvent event(int row);
-    int rowCount() const;
-    int columnCount() const;
-    int size() const;
-    void clear();
+}
 
-    void selectAll();
-    void select(int row);
-
-//    double value(int row, int column) const;
-//    double value(int index) const;
-//    QVector <double> row(int row) const;
-//    QVector <double> column(int column)const;
-//    int rowCount() const;
-//    int columnCount() const;
-//    int size() const;
-//    void selectAll();
-//    void select(int row);
-//    void clear();
-
-    //Statistics computation
-//    double average(int column) const;
-//    double variance(int column) const;
-//    double standardDeviation(int column) const;
-//    double cv(int column) const;
-
-//    const QList<FcsField>& fields() const {return mFields;}
-
-//    void setRows(const QList<int>& rows);
+double FcsEvent::value(int column)
+{
+    if (mSources)
+        return mSources->at(mIndexes.at(column));
+    else
+        return 0;
 
 
-private:
-QList<FcsEvent> mEvents;
 
+}
 
-};
-
-#endif // FCSDATA_H
