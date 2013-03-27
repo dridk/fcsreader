@@ -180,7 +180,7 @@ void MainWindow::subWindowActivated(QMdiSubWindow *sub)
 
 
             mOptionDockWidget->setWidget(plot->propertyListWidget());
-
+            plot->replot();
         }
 
     }
