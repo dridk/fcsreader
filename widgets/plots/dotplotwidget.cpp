@@ -66,29 +66,29 @@ void DotPlotWidget::replot()
     if (rootGate() == NULL)
         return;
 
-        for (int i=0; i<rootGate()->data().rowCount(); ++i)
-        {
-            double x = rootGate()->data().value(i,mXField);
-            double y = rootGate()->data().value(i,mYField);
+    for (int i=0; i<rootGate()->data().rowCount(); ++i)
+    {
+        double x = rootGate()->data().value(i,mXField);
+        double y = rootGate()->data().value(i,mYField);
 
-            QCPData newsData;
-            newsData.key = x;
-            newsData.value = y;
-            newsData.index = i;
+        QCPData newsData;
+        newsData.key = x;
+        newsData.value = y;
+        newsData.index = rootGate()->data().toSourceRow(i);
 
-            dataMap.insertMulti(x,newsData);
+        dataMap.insertMulti(x,newsData);
 
-        }
+    }
 
-        plot()->setTitle(QString::number(dataMap.count()));
-        plot()->graph()->setData(&dataMap,true);
-        plot()->graph()->setPen(QPen(rootGate()->color()));
-        //plot()->rescaleAxes();
-        plot()->xAxis->setRange(0,1024);
-        plot()->yAxis->setRange(0,1024);
+    plot()->setTitle(QString::number(dataMap.count()));
+    plot()->graph()->setData(&dataMap,true);
+    plot()->graph()->setPen(QPen(rootGate()->color()));
+    //plot()->rescaleAxes();
+    plot()->xAxis->setRange(0,1024);
+    plot()->yAxis->setRange(0,1024);
 
 
-        plot()->replot();
+    plot()->replot();
 
 }
 
@@ -151,20 +151,21 @@ void DotPlotWidget::computeGate()
 
         //compute data inside the shape
         QPolygonF poly = item->mapToScene(item->polygon());
-        QList<int> events;
+        FcsData newData = rootGate()->data();
+        newData.clear();
+
         foreach ( QCPData data, plot()->graph()->data()->values())
         {
             double x  = plot()->xAxis->coordToPixel(data.key);
             double y  = plot()->yAxis->coordToPixel(data.value);
 
             if (poly.containsPoint( QPointF(x,y),Qt::WindingFill))
-                events.append(data.index);
+                newData.select(data.index);
+
 
         }
 
-        qDebug()<<events.count()<<"trouvé";
-        FcsData newData = rootGate()->data();
-        newData.setRows(events);
+
         item->gate()->setData(newData);
 
 

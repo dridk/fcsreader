@@ -32,12 +32,12 @@
 #include <QVariantMap>
 #include <QtCore>
 #include "fcsdata.h"
+#include "fcsdatasource.h"
 
 /*!
   Load and read data from a FCS file version 3.0
 */
 class FcsFile;
-class FcsData;
 class FcsFile : public QFile
 {
 public:
@@ -54,7 +54,9 @@ public:
     QVector<double> dataSegment() const;
 
     //Return a copy a data
-    FcsData data() ;
+    FcsDataSource * dataSource() ;
+
+    FcsData data();
 
     //Return FCS file version
     QString version();
@@ -77,6 +79,7 @@ protected:
 private:
     QVariantMap mTextSegment;
     QVector<double> mDataSegment;
+    FcsDataSource mDataSource;
 
 
 

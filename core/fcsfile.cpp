@@ -58,7 +58,7 @@ FcsFile::FcsFile(const QString &fileName, QObject *parent)
 {
 
 
-    FcsData data;
+
 }
 
 
@@ -78,16 +78,15 @@ const QVariantMap& FcsFile::textSegment() const
 
 QVector<double> FcsFile::dataSegment() const
 {
-return mDataSegment;
+    return mDataSegment;
 
 }
 
-FcsData FcsFile::data()
+
+FcsDataSource *  FcsFile::dataSource()
 {
 
-    FcsData fcsData;
-    fcsData.mDatas = &mDataSegment;
-
+    QList<FcsField> fields;
     for (int col=1; col<=parameterCount(); ++col)
     {
         FcsField field;
@@ -96,13 +95,20 @@ FcsData FcsFile::data()
         field.setGain(textSegment().value(QString("P%1G").arg(col)).toDouble());
         field.setRange(textSegment().value(QString("P%1R").arg(col)).toDouble());
         field.setVoltage(textSegment().value(QString("P%1V").arg(col)).toInt());
-        fcsData.mFields.append(field);
-
-        qDebug()<<field.name();
-
+        fields.append(field);
     }
 
-//    fcsData.selectAll();
+    mDataSource.setData(fields,mDataSegment);
+
+    return &mDataSource;
+
+}
+
+FcsData FcsFile::data()
+{
+    FcsData fcsData;
+    fcsData.setSource(dataSource());
+    fcsData.selectAll();
     return fcsData;
 
 }

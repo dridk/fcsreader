@@ -7,7 +7,8 @@ HEADERS += \
     widgets/propertylistwidget.h \
     widgets/gatetreewidget.h \
     widgets/colorbutton.h \
-    widgets/shapeitem.h
+    widgets/shapeitem.h \
+    widgets/qcustomplot.h
 
 SOURCES += \
     widgets/statisticswidget.cpp \
@@ -16,5 +17,6 @@ SOURCES += \
     widgets/propertylistwidget.cpp \
     widgets/gatetreewidget.cpp \
     widgets/colorbutton.cpp \
-    widgets/shapeitem.cpp
+    widgets/shapeitem.cpp \
+    widgets/qcustomplot.cpp
 

@@ -24,48 +24,32 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef FCSDATA_H
-#define FCSDATA_H
+#ifndef SOURCEDATA_H
+#define SOURCEDATA_H
+
+#include <QObject>
 #include <QtCore>
 #include "fcsfield.h"
-#include "fcsdatasource.h"
-class FcsData;
-typedef QMap<QString,FcsData> FcsDataMap;
-class FcsData
+
+class FcsDataSource
 {
 public:
-    FcsData();
-    double value(int row, int column) const;
-    int toSourceRow(int row) const;
-    int rowCount() const;
+    explicit FcsDataSource();
+    double value(int row, int column);
+
     int columnCount() const;
-    int size() const;
+    int rowCount() const;
+
     const FcsField& field(int column) const;
     const QList<FcsField>& fields() const;
-
-    void clear();
-    void selectAll();
-    void select(int sourceRow);
-
-    void setSource(FcsDataSource * dataSource);
-
-
-    // Statistics computation
-    double average(int column) const;
-    double variance(int column) const;
-    double standardDeviation(int column) const;
-    double cv(int column) const;
-
-
-
-    void setRows(const QList<int>& rows);
+    
+    void setData(const QList<FcsField>& fields,const QVector<double>& datas);
 
 
 private:
-    FcsDataSource * mDataSource;
-    QList<int> mSourceRows;
-
-
+    QVector<double> mDatas;
+    QList<FcsField> mFields;
+    
 };
 
-#endif // FCSDATA_H
+#endif // SOURCEDATA_H

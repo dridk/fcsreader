@@ -13,17 +13,17 @@ TARGET = fcsViewer
 RESOURCES +=  icons/icons.qrc
 
 SOURCES +=     main.cpp \
-#    mainwindow.cpp
+    mainwindow.cpp
 
 
 
 include(core/core.pri)
-#include(widgets/widgets.pri)
-#include(widgets/plots/plots.pri)
-#include(widgets/property/property.pri)
+include(widgets/widgets.pri)
+include(widgets/plots/plots.pri)
+include(widgets/property/property.pri)
 
-#HEADERS += \
-#    mainwindow.h
+HEADERS += \
+    mainwindow.h
 
-#FORMS += \
-#    mainwindow.ui
+FORMS += \
+    mainwindow.ui

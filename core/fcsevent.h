@@ -27,16 +27,18 @@
 #ifndef FCSEVENT_H
 #define FCSEVENT_H
 #include <QtCore>
+
 class FcsEvent
 {
 public:
     FcsEvent();
     double value(int column);
 
+//    void setData(const QVector<double>& data);
+
 
 private:
-    QVector<double> * mSources;
-    QList<int> mIndexes;
+//    QList<int> mValues;
 
 
 };

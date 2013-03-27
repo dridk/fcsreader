@@ -24,48 +24,51 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#ifndef FCSDATA_H
-#define FCSDATA_H
-#include <QtCore>
-#include "fcsfield.h"
 #include "fcsdatasource.h"
-class FcsData;
-typedef QMap<QString,FcsData> FcsDataMap;
-class FcsData
+
+FcsDataSource::FcsDataSource()
 {
-public:
-    FcsData();
-    double value(int row, int column) const;
-    int toSourceRow(int row) const;
-    int rowCount() const;
-    int columnCount() const;
-    int size() const;
-    const FcsField& field(int column) const;
-    const QList<FcsField>& fields() const;
-
-    void clear();
-    void selectAll();
-    void select(int sourceRow);
-
-    void setSource(FcsDataSource * dataSource);
+}
 
 
-    // Statistics computation
-    double average(int column) const;
-    double variance(int column) const;
-    double standardDeviation(int column) const;
-    double cv(int column) const;
+double FcsDataSource::value(int row, int column)
+{
+     Q_ASSERT_X(column<columnCount(), "","column out of range");
+    int offset = columnCount() * row + column;
+    return mDatas.at(offset);
+}
+
+int FcsDataSource::columnCount() const
+{
+    return mFields.count();
+}
+
+int FcsDataSource::rowCount() const
+{
+    Q_ASSERT_X(mFields.count(), "","no field, divised par 0");
+    return mDatas.size() / mFields.count();
+}
+
+const FcsField &FcsDataSource::field(int column) const
+{
+    return mFields.at(column);
+}
+
+const QList<FcsField> &FcsDataSource::fields() const
+{
+    return mFields;
+}
+
+void FcsDataSource::setData(const QList<FcsField> &fields, const QVector<double> &datas)
+{
+    mFields = fields;
+    mDatas = datas;
+
+
+}
 
 
 
-    void setRows(const QList<int>& rows);
 
 
-private:
-    FcsDataSource * mDataSource;
-    QList<int> mSourceRows;
 
-
-};
-
-#endif // FCSDATA_H

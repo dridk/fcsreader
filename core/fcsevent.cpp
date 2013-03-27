@@ -27,18 +27,23 @@
 #include "fcsevent.h"
 
 FcsEvent::FcsEvent()
-    :mSources(0)
+
 {
 }
 
 double FcsEvent::value(int column)
 {
-    if (mSources)
-        return mSources->at(mIndexes.at(column));
-    else
-        return 0;
+
 
 
 
 }
+
+//void FcsEvent::setData(const QVector<double> &data)
+//{
+
+
+//}
+
+
 
