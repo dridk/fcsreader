@@ -29,6 +29,7 @@
 
 #include <QAbstractItemModel>
 #include "gate.h"
+
 class GateTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -41,9 +42,10 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
     void setGate(Gate * gate);
+    Gate * gate(const QModelIndex& index);
 
 public slots:
-    void test();
+
 
 private:
     Gate * mRootItem;

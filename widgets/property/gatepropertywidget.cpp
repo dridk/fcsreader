@@ -32,6 +32,7 @@ GatePropertyWidget::GatePropertyWidget(Gate *rootGate, QWidget *parent) :
     mRootGate = rootGate;
     QFormLayout * layout = new QFormLayout;
     mGateComboBox = new QComboBox;
+    mGateComboBox->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
     setLayout(layout);
 
     layout->addRow("Source Data", mGateComboBox);
@@ -48,6 +49,13 @@ GatePropertyWidget::GatePropertyWidget(Gate *rootGate, QWidget *parent) :
 GatePropertyWidget::~GatePropertyWidget()
 {
     delete mGateComboBox;
+}
+
+Gate* GatePropertyWidget::currentGate()
+{
+    Gate * gate = mRootGate->all().at(mGateComboBox->currentIndex());
+    return gate;
+
 }
 
 void GatePropertyWidget::loadCombo()
@@ -72,7 +80,7 @@ void GatePropertyWidget::loadCombo()
 
 void GatePropertyWidget::emitGate()
 {
-
+    qDebug()<<"emit gate changed";
     Gate * gate = mRootGate->all().at(mGateComboBox->currentIndex());
     if (gate)
         emit gateChanged(gate);

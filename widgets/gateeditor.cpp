@@ -24,29 +24,48 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#include "gatetreewidget.h"
-
-GateTreeWidget::GateTreeWidget(QWidget *parent) :
-    QTreeView(parent)
+#include "gateeditor.h"
+#include <QFormLayout>
+#include <QDialogButtonBox>
+GateEditor::GateEditor(Gate *gate, QWidget *parent):
+    QDialog(parent)
 {
-    setWindowTitle("Gate list");
-    mGateModel = new GateTreeModel;
-    setModel(mGateModel);
-    connect(this,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(showEditor(QModelIndex)));
+
+    mGate = gate;
+
+    QFormLayout * formLayout = new QFormLayout;
+    mColorButton  = new ColorButton;
+    mNameEdit = new QLineEdit;
+    formLayout->addRow("name", mNameEdit);
+    formLayout->addRow("color", mColorButton);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,
+                                                       Qt::Horizontal);
+
+    setLayout(new QVBoxLayout);
+    QWidget * form = new QWidget;
+    form->setLayout(formLayout);
+    layout()->addWidget(form);
+    layout()->addWidget(buttonBox);
+
+
+    connect(buttonBox,SIGNAL(rejected()),this,SLOT(reject()));
+    connect(buttonBox,SIGNAL(accepted()),this,SLOT(save()));
+
+    mNameEdit->setText(mGate->name());
+    mColorButton->setColor(mGate->color());
+
 
 
 }
 
-GateTreeModel *GateTreeWidget::gateModel()
+void GateEditor::save()
 {
-    return mGateModel;
+    qDebug()<<"accepted";
+    mGate->setName(mNameEdit->text());
+    mGate->setColor(mColorButton->color());
+
+   close();
 }
 
-void GateTreeWidget::showEditor(const QModelIndex &index)
-{
 
-
-    GateEditor * editor = new GateEditor(gateModel()->gate(index));
-    editor->exec();
-    delete editor;
-}

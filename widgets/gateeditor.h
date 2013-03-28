@@ -24,29 +24,25 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#include "gatetreewidget.h"
+#ifndef GATEWIDGET_H
+#define GATEWIDGET_H
 
-GateTreeWidget::GateTreeWidget(QWidget *parent) :
-    QTreeView(parent)
+#include <QWidget>
+#include <QtGui>
+#include "colorbutton.h"
+#include "gate.h"
+class GateEditor : public QDialog
 {
-    setWindowTitle("Gate list");
-    mGateModel = new GateTreeModel;
-    setModel(mGateModel);
-    connect(this,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(showEditor(QModelIndex)));
+    Q_OBJECT
+public:
+    explicit GateEditor(Gate * gate, QWidget *parent = 0);
+public slots:
+    void save();
+private:
+   ColorButton * mColorButton;
+   QLineEdit * mNameEdit;
+   Gate * mGate;
 
+};
 
-}
-
-GateTreeModel *GateTreeWidget::gateModel()
-{
-    return mGateModel;
-}
-
-void GateTreeWidget::showEditor(const QModelIndex &index)
-{
-
-
-    GateEditor * editor = new GateEditor(gateModel()->gate(index));
-    editor->exec();
-    delete editor;
-}
+#endif // GATEWIDGET_H

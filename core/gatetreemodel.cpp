@@ -136,9 +136,12 @@ void GateTreeModel::setGate(Gate *gate)
     reset();
 }
 
-void GateTreeModel::test()
+Gate *GateTreeModel::gate(const QModelIndex &index)
 {
-    qDebug()<<"test";
-}
 
+ Gate *item = static_cast<Gate*>(index.internalPointer());
+ return item;
+
+
+}
 

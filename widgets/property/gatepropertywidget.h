@@ -37,6 +37,7 @@ public:
     explicit GatePropertyWidget(Gate * rootGate, QWidget *parent = 0);
     ~GatePropertyWidget();
 
+    Gate * currentGate();
 
 signals:
     void gateChanged(Gate* gate);

@@ -48,6 +48,7 @@ ShapeItem::ShapeItem( const QPolygon &polygon, QGraphicsItem *parent ):
 
 
 
+
 }
 
 ShapeItem::~ShapeItem()
@@ -140,9 +141,12 @@ const QColor &ShapeItem::color() const
 
 void ShapeItem::setPolygon(const QPolygon &polygon)
 {
+    if (polygon.isEmpty())
+        return;
+
     mPolygon = polygon;
     update();
-    emit changed();
+    change();
 
 }
 
@@ -155,6 +159,7 @@ void ShapeItem::setGate(Gate *gate)
 {
     mGate = gate;
     mGate->setColor(color());
+    connect(this,SIGNAL(changed()),mGate,SIGNAL(changed()));
 }
 
 Gate *ShapeItem::gate() const
@@ -256,9 +261,37 @@ void ShapeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     }
     else {
-        emit changed();
+        change();
         QGraphicsObject::mouseReleaseEvent(event);
     }
+}
+
+QPolygon ShapeItem::normalize(const QPolygon &poly)
+{
+    if ( poly.isEmpty())
+        return QPolygon();
+
+    QPolygon newPoly = poly;
+
+    QPoint min = newPoly.first();
+    foreach ( QPoint p , newPoly)
+    {
+        min.setX(qMin(min.x(),p.x()));
+        min.setY(qMin(min.y(),p.y()));
+    }
+
+    for (int i=0; i<newPoly.count(); ++i)
+        newPoly[i] -= min;
+
+
+    return newPoly;
+
+
+}
+
+void ShapeItem::change()
+{
+    emit changed();
 }
 
 

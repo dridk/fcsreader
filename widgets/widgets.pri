@@ -8,7 +8,8 @@ HEADERS += \
     widgets/gatetreewidget.h \
     widgets/colorbutton.h \
     widgets/shapeitem.h \
-    widgets/qcustomplot.h
+    widgets/qcustomplot.h \
+    widgets/gateeditor.h
 
 SOURCES += \
     widgets/statisticswidget.cpp \
@@ -18,5 +19,6 @@ SOURCES += \
     widgets/gatetreewidget.cpp \
     widgets/colorbutton.cpp \
     widgets/shapeitem.cpp \
-    widgets/qcustomplot.cpp
+    widgets/qcustomplot.cpp \
+    widgets/gateeditor.cpp
 

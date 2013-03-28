@@ -24,29 +24,39 @@
 **           Date   : 12.03.12                                            **
 ****************************************************************************/
 
-#include "gatetreewidget.h"
+#ifndef DOTPLOTINFOWIDGET_H
+#define DOTPLOTINFOWIDGET_H
 
-GateTreeWidget::GateTreeWidget(QWidget *parent) :
-    QTreeView(parent)
+#include <QWidget>
+#include <QtGui>
+class DotPlotInfoPropertyWidget : public QWidget
 {
-    setWindowTitle("Gate list");
-    mGateModel = new GateTreeModel;
-    setModel(mGateModel);
-    connect(this,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(showEditor(QModelIndex)));
+    Q_OBJECT
+public:
+    explicit DotPlotInfoPropertyWidget(QWidget *parent = 0);
+    void setAverage(double value ,  Qt::Axis axis);
+    void setVariance(double value, Qt::Axis axis);
+    void setStandardDeviation(double value, Qt::Axis axis);
+    void setCv(double value, Qt::Axis axis);
+    
+private:
+
+    QLabel* mXAverageLabel;
+    QLabel* mYAverageLabel;
+
+    QLabel* mXVarianceLabel;
+    QLabel* mYVarianceLabel;
+
+    QLabel* mXSdLabel;
+    QLabel* mYSdLabel;
+
+    QLabel* mXCvLabel;
+    QLabel* mYCvLabel;
 
 
-}
-
-GateTreeModel *GateTreeWidget::gateModel()
-{
-    return mGateModel;
-}
-
-void GateTreeWidget::showEditor(const QModelIndex &index)
-{
 
 
-    GateEditor * editor = new GateEditor(gateModel()->gate(index));
-    editor->exec();
-    delete editor;
-}
+    
+};
+
+#endif // DOTPLOTINFOWIDGET_H

@@ -3,11 +3,11 @@
 #include <QMenu>
 #include <QGraphicsProxyWidget>
 
-AbstractPlotWidget::AbstractPlotWidget(Gate *rootGate, QWidget *parent) :
+AbstractPlotWidget::AbstractPlotWidget(Gate *gate, QWidget *parent) :
     QGraphicsView(parent)
 {
 
-    mRootGate = rootGate;
+    mGate = gate;
     setScene( new QGraphicsScene);
     mPlot  = new QCustomPlot;
     mPlotItem = new QGraphicsProxyWidget;
@@ -23,7 +23,7 @@ AbstractPlotWidget::AbstractPlotWidget(Gate *rootGate, QWidget *parent) :
     setupProperty();
 
     connect(mGatePropertyWidget,SIGNAL(gateChanged(Gate*)),this,SLOT(setGate(Gate*)));
-
+    connect(mGate,SIGNAL(changed()),mGatePropertyWidget,SLOT(loadCombo()));
 
 
 }
@@ -39,24 +39,21 @@ const QString &AbstractPlotWidget::title() const
     return windowTitle();
 }
 
-void AbstractPlotWidget::setGate(Gate *rootGate)
+void AbstractPlotWidget::setGate(Gate *gate)
 {
-    mRootGate = rootGate;
-    replot();
-}
-
-void AbstractPlotWidget::test()
-{
-
-    qDebug()<<"besoin de suppression";
+    mGate = gate;
+    connect(mGate,SIGNAL(changed()),this,SIGNAL(gateChanged()));
+    emit gateChanged();
 
 }
 
 
-Gate *AbstractPlotWidget::rootGate()
+
+
+Gate *AbstractPlotWidget::gate()
 {
-    if (mRootGate)
-    return mRootGate;
+    if (mGate)
+    return mGate;
     else return NULL;
 }
 
@@ -124,14 +121,27 @@ void AbstractPlotWidget::mouseMoveEvent(QMouseEvent *event)
 
 void AbstractPlotWidget::resizeEvent(QResizeEvent *event)
 {
-    scene()->setSceneRect(0,0,event->size().width(), event->size().height());
-    mPlotItem->resize(event->size());
+  scene()->setSceneRect(0,0,event->size().width(), event->size().height());
+  mPlotItem->resize(event->size());
+
+  foreach (QGraphicsItem * item, scene()->items())
+  {
+      if (item != mPlotItem)
+      {
+
+      }
+
+  }
+
+
+//   fitInView(mPlotItem);
+  QGraphicsView::resizeEvent(event);
 
 }
 
 void AbstractPlotWidget::setupProperty()
 {
-    mGatePropertyWidget = new GatePropertyWidget(mRootGate);
+    mGatePropertyWidget = new GatePropertyWidget(gate());
     mCommonPropertyWidget = new DisplayPropertyWidget;
 
     propertyListWidget()->addWidget(mGatePropertyWidget);

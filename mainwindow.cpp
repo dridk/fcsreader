@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mOptionDockWidget->setVisible(false);
     mOptionDockWidget->setMinimumWidth(300);
+
     mRootGate->setName("All");
 
 
@@ -179,7 +180,10 @@ void MainWindow::subWindowActivated(QMdiSubWindow *sub)
             ui->plotToolBar->addActions(plot->actions());
 
 
+//            mOptionDockWidget->widget();
             mOptionDockWidget->setWidget(plot->propertyListWidget());
+//            mOptionDockWidget->show();
+
             plot->replot();
         }
 

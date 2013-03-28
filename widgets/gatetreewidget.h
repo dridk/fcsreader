@@ -29,15 +29,21 @@
 
 #include <QTreeView>
 #include "gatetreemodel.h"
+#include "gateeditor.h"
+#include "gate.h"
 class GateTreeWidget : public QTreeView
 {
     Q_OBJECT
 public:
     explicit GateTreeWidget(QWidget *parent = 0);
     GateTreeModel * gateModel();
+
+public slots:
+    void showEditor(const QModelIndex& index);
     
 private:
     GateTreeModel * mGateModel;
+
     
 };
 

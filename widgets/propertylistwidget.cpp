@@ -39,6 +39,7 @@ PropertyListWidget::PropertyListWidget(QWidget *parent) :
     mContent->setLayout(mContentLayout);
     setWidgetResizable(true);
     setWidget(mContent);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 }
 

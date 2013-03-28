@@ -53,6 +53,8 @@ public:
 signals:
     void changed();
 
+public slots:
+    void change();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -60,6 +62,7 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+     QPolygon normalize(const QPolygon& poly);
 
 
 private:

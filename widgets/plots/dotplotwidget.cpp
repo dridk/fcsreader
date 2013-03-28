@@ -11,13 +11,14 @@
 #include "shapeitem.h"
 #include "dotplotpropertywidget.h"
 
-DotPlotWidget::DotPlotWidget(Gate *rootGate, QWidget *parent):
-    AbstractPlotWidget(rootGate,parent)
+DotPlotWidget::DotPlotWidget(Gate *gate, QWidget *parent):
+    AbstractPlotWidget(gate,parent)
 
 {
     mXField = 0;
     mYField = 1;
-    mPropertyWidget = new DotPlotPropertyWidget(rootGate);
+    mPropertyWidget = new DotPlotPropertyWidget(gate);
+    mInfoWidget = new DotPlotInfoPropertyWidget;
     mGateEditItem = new QGraphicsPolygonItem;
     plot()->graph()->setPen(QPen(Qt::black));
     plot()->xAxis->setRange(0,1024);
@@ -37,6 +38,7 @@ DotPlotWidget::DotPlotWidget(Gate *rootGate, QWidget *parent):
     setXLabel();
 
     propertyListWidget()->addWidget(mPropertyWidget);
+    propertyListWidget()->addWidget(mInfoWidget);
 
 
     connect(gateAction,SIGNAL(triggered(bool)),this,SLOT(setGateEditing(bool)));
@@ -50,10 +52,9 @@ DotPlotWidget::DotPlotWidget(Gate *rootGate, QWidget *parent):
     connect(mPropertyWidget,SIGNAL(xLabelChanged(QString)),this,SLOT(setXLabel(QString)));
     connect(mPropertyWidget,SIGNAL(yLabelChanged(QString)),this,SLOT(setYLabel(QString)));
 
+    connect(this,SIGNAL(gateChanged()),this,SLOT(replot()));
+    connect(this,SIGNAL(gateChanged()),this,SLOT(allSubGateChanged()));
 
-
-    ShapeItem * item = new ShapeItem;
-    scene()->addItem(item);
 
     scene()->addItem(mGateEditItem);
     mGateEditItem->setVisible(false);
@@ -63,18 +64,21 @@ DotPlotWidget::DotPlotWidget(Gate *rootGate, QWidget *parent):
 void DotPlotWidget::replot()
 {
     QCPDataMap dataMap;
-    if (rootGate() == NULL)
+    if (gate() == NULL)
         return;
 
-    for (int i=0; i<rootGate()->data().rowCount(); ++i)
+    qDebug()<<"replot";
+
+
+    for (int i=0; i<gate()->data().rowCount(); ++i)
     {
-        double x = rootGate()->data().value(i,mXField);
-        double y = rootGate()->data().value(i,mYField);
+        double x = gate()->data().value(i,mXField);
+        double y =gate()->data().value(i,mYField);
 
         QCPData newsData;
         newsData.key = x;
         newsData.value = y;
-        newsData.index = rootGate()->data().toSourceRow(i);
+        newsData.index = gate()->data().toSourceRow(i);
 
         dataMap.insertMulti(x,newsData);
 
@@ -82,13 +86,25 @@ void DotPlotWidget::replot()
 
     plot()->setTitle(QString::number(dataMap.count()));
     plot()->graph()->setData(&dataMap,true);
-    plot()->graph()->setPen(QPen(rootGate()->color()));
+    plot()->graph()->setPen(QPen(gate()->color()));
     //plot()->rescaleAxes();
     plot()->xAxis->setRange(0,1024);
     plot()->yAxis->setRange(0,1024);
-
-
     plot()->replot();
+
+
+    //Set info
+    mInfoWidget->setAverage(gate()->data().average(mXField),Qt::XAxis);
+    mInfoWidget->setVariance(gate()->data().variance(mXField),Qt::XAxis);
+    mInfoWidget->setCv(gate()->data().cv(mXField),Qt::XAxis);
+    mInfoWidget->setStandardDeviation(gate()->data().standardDeviation(mXField),Qt::XAxis);
+
+    mInfoWidget->setAverage(gate()->data().average(mYField),Qt::YAxis);
+    mInfoWidget->setVariance(gate()->data().variance(mYField),Qt::YAxis);
+    mInfoWidget->setCv(gate()->data().cv(mYField),Qt::YAxis);
+    mInfoWidget->setStandardDeviation(gate()->data().standardDeviation(mYField),Qt::YAxis);
+
+
 
 }
 
@@ -109,7 +125,7 @@ void DotPlotWidget::setXLabel(const QString &label)
 {
     //if user label is empty, use the fcs data filed name
     if (label.isEmpty())
-        plot()->xAxis->setLabel(rootGate()->data().fields().at(mXField).name());
+        plot()->xAxis->setLabel(gate()->data().fields().at(mXField).name());
     else
         plot()->xAxis->setLabel(label);
 
@@ -120,7 +136,7 @@ void DotPlotWidget::setYLabel(const QString &label)
 {
     //if user label is empty, use the fcs data filed name
     if (label.isEmpty())
-        plot()->yAxis->setLabel(rootGate()->data().fields().at(mYField).name());
+        plot()->yAxis->setLabel(gate()->data().fields().at(mYField).name());
     else
         plot()->yAxis->setLabel(label);
 
@@ -146,12 +162,14 @@ void DotPlotWidget::computeGate()
         {
             item->setGate(new Gate);
             item->gate()->setName(QUuid::createUuid().toString());
-            rootGate()->appendChild(item->gate());
+            gate()->appendChild(item->gate());
+
+
         }
 
         //compute data inside the shape
         QPolygonF poly = item->mapToScene(item->polygon());
-        FcsData newData = rootGate()->data();
+        FcsData newData = gate()->data();
         newData.clear();
 
         foreach ( QCPData data, plot()->graph()->data()->values())
@@ -173,6 +191,13 @@ void DotPlotWidget::computeGate()
 
 
 
+
+}
+
+void DotPlotWidget::allSubGateChanged()
+{
+    foreach (ShapeItem * item, mShapeItems)
+         item->change();
 
 }
 
@@ -228,8 +253,6 @@ void DotPlotWidget::mouseDoubleClickEvent(QMouseEvent *event)
         item->setSelected(true);
         scene()->addItem(item);
 
-
-
     }
 
     else AbstractPlotWidget::mouseDoubleClickEvent(event);
@@ -244,6 +267,7 @@ void DotPlotWidget::keyPressEvent(QKeyEvent *event)
         qDebug()<<"delete items"<<scene()->selectedItems().count();
         foreach (QGraphicsItem * item, scene()->selectedItems())
         {
+            mShapeItems.removeOne((ShapeItem*)(item));
             delete item;
         }
     }

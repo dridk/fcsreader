@@ -5,11 +5,12 @@
 #include "abstractplotwidget.h"
 #include "dotplotpropertywidget.h"
 #include "shapeitem.h"
+#include "dotplotinfopropertywidget.h"
 class DotPlotWidget : public AbstractPlotWidget
 {
     Q_OBJECT
 public:
-    DotPlotWidget(Gate * rootGate, QWidget * parent = 0);
+    DotPlotWidget(Gate * gate, QWidget * parent = 0);
     virtual void replot();
 
 
@@ -29,16 +30,17 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 protected slots:
     void computeGate();
+    void allSubGateChanged();
 
 
 
 private:
-    DotPlotPropertyWidget * mPropertyWidget;
     int mXField;
     int mYField;
     QGraphicsPolygonItem * mGateEditItem;
     QList<ShapeItem*> mShapeItems;
-
+    DotPlotPropertyWidget * mPropertyWidget;
+    DotPlotInfoPropertyWidget * mInfoWidget;
 
 
 };

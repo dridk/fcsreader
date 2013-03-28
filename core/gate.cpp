@@ -105,6 +105,7 @@ QList<Gate *> Gate::all()
 void Gate::setName(const QString &name)
 {
     mName = name;
+    emit changed();
 }
 const QString &Gate::name() const
 {

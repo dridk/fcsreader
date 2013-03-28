@@ -22,24 +22,24 @@ class AbstractPlotWidget : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit AbstractPlotWidget(Gate * rootGate, QWidget *parent = 0);
+    explicit AbstractPlotWidget(Gate * gate, QWidget *parent = 0);
     QCustomPlot * plot() {return mPlot;}
 
     void setTitle(const QString& title);
     const QString& title() const;
 
-    Gate * rootGate();
+    Gate * gate();
 
-    PropertyListWidget * propertyListWidget() {return mPropertyWidget;}
-
+    PropertyListWidget* propertyListWidget() {return mPropertyWidget;}
+    GatePropertyWidget* gatePropertyWidget() {return mGatePropertyWidget;}
+    DisplayPropertyWidget * displayPropertyWidget() {return mCommonPropertyWidget;}
     virtual StatsData statsData() ;
 
 public slots:
     virtual void replot() = 0;
-    void setGate(Gate * rootGate);
-
-    void test();
-
+    void setGate(Gate * gate);
+signals:
+    void gateChanged();
 
 
 
@@ -54,7 +54,7 @@ protected:
 private:
     QCustomPlot * mPlot;
     QGraphicsProxyWidget * mPlotItem;
-    Gate * mRootGate;
+    Gate * mGate;
     PropertyListWidget * mPropertyWidget;
 
     //Common property widget
